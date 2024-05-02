@@ -1,4 +1,5 @@
-export class UserProfileDto {
+export class UserCreateDto {
   name: string;
+
   password: string;
 }
