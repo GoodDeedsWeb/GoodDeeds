@@ -43,7 +43,13 @@ export class UserRepository implements IUserRepository {
     return this.users;
   }
 
-  update(newUser: User){
-    this.users = this.users.map((user) => user.id === newUser.id ? { id: newUser.id, name: newUser.name, password: newUser.password } : user);
+  update(newUser: User): boolean{
+    try{
+      this.users = this.users.map((user) => user.id === newUser.id ? { id: newUser.id, name: newUser.name, password: newUser.password } : user);
+      return true;
+    }
+    catch {
+      return false;
+    }
   }
 }
