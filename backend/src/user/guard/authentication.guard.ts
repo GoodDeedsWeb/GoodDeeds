@@ -1,0 +1,39 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-var */
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { JWT_SECURITY_KEY } from '../../constants/jwt.security.key';
+
+@Injectable()
+export class AuthenticationGuard implements CanActivate {
+  constructor(private readonly jwtService: JwtService) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    const token = this.getJwtTokenFromRequest(request);
+    if (token === undefined){
+      throw new UnauthorizedException();
+    }
+
+    try {
+      var decodedToken = this.jwtService.verify(token, { secret: JWT_SECURITY_KEY});
+      request['user'] = decodedToken;
+      return true;
+    }
+    catch(err){
+      throw new ForbiddenException();
+    }
+  }
+
+  private getJwtTokenFromRequest(request: Request): string | undefined {
+    const authorizationField = request.headers['authorization']; 
+
+    if (authorizationField === undefined){
+      return undefined;
+    }
+
+    const [type, token] = authorizationField.split(' ');
+    
+    return type === 'Bearer' ? token : undefined;
+  }
+}
