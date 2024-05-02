@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserCreateDto } from 'src/entities/user.dto/UserCreareDto';
-import { UserService } from 'src/user/user.service';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { UserCreateDto } from 'src/entities/user.dto/user.create.dto';
+import { IUserService } from 'src/interfaces/services/user.service.interface';
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private readonly userService: UserService) {}
+  constructor(@Inject('IUserService') private readonly userService: IUserService) {}
 
   signIn(name: string, password: string): string {
-    const user = this.userService.findUser(name);
+    const user = this.userService.findUserByName(name);
     if (user === undefined) {
       return 'Username is incorrect.';
     }
@@ -24,7 +24,7 @@ export class AuthenticationService {
     if (userCreateDto.name.length <= 1 || userCreateDto.name === undefined || userCreateDto.password.length <= 1 || userCreateDto.password === undefined) {
       return 'Incorrect name or password.';
     }
-    
+
     const countUserCreated = this.userService.createUser(userCreateDto);
     return `Count user created = ${countUserCreated}`;
   }
