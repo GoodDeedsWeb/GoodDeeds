@@ -10,14 +10,14 @@ import { AuthenticationGuard } from './guard/authentication.guard';
 import { USER_REPOSITORY_TOKEN, USER_SERVICE_TOKEN } from '../constants/user.tokens';
 import { AUTH_GUARD } from '../constants/guards';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../entities/user';
+import { User } from '../entities/db_entities/user';
 
 @Module({
   imports: [
     JwtModule.register({
       global: false,
       secret: JWT_SECURITY_KEY,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '300s' },
     }),
     TypeOrmModule.forFeature([User]),
   ],
