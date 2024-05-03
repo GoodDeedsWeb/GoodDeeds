@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('user')
+@Entity('Users')
 export class User {
   @PrimaryGeneratedColumn()
   @AutoMap()
