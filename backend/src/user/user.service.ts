@@ -22,14 +22,14 @@ export class UserService implements IUserService {
 
   async registerUser(userCreateDto: UserCreateDto): Promise<RequestResult> {
     // TODO: сделать валидацию
-    if (userCreateDto.name.length <= 1 || userCreateDto.name === undefined || userCreateDto.password.length <= 1 || userCreateDto.password === undefined) {
+    if (userCreateDto.Name.length <= 1 || userCreateDto.Name === undefined || userCreateDto.Password.length <= 1 || userCreateDto.Password === undefined) {
       return { isSuccess: false, statusCode: HttpStatus.BAD_REQUEST, message: 'Incorrect name or password.' };
     }
     
-    const foundUser = await this.userRepository.findByName(userCreateDto.name);
+    const foundUser = await this.userRepository.findByName(userCreateDto.Name);
 
     if (foundUser) {
-      return { isSuccess: false, statusCode: HttpStatus.CONFLICT, message: `User with name - ${userCreateDto.name} already exist.` };
+      return { isSuccess: false, statusCode: HttpStatus.CONFLICT, message: `User with name - ${userCreateDto.Name} already exist.` };
     }
 
     const user = this.mapper.map(userCreateDto, UserCreateDto, User)
@@ -40,21 +40,21 @@ export class UserService implements IUserService {
       return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
     }
 
-    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User - ${newUser.name} has been created.` };
+    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User - ${newUser.Name} has been created.` };
   }
 
   async loginUser(userLoginDto: UserLoginDto): Promise<Jwt | undefined> {
-    const user = await this.userRepository.findByName(userLoginDto.name);
+    const user = await this.userRepository.findByName(userLoginDto.Name);
 
     if (!user) {
       return undefined;
     }
 
-    if (user.password !== userLoginDto.password) {
+    if (user.Password !== userLoginDto.Password) {
       throw new UnauthorizedException('Password is incorrect.');
     }
 
-    const payload = { sub: user.id, name: user.name };
+    const payload = { sub: user.Id, name: user.Name };
     const token = this.jwtService.sign(payload);
 
     return { token: token };
@@ -85,10 +85,10 @@ export class UserService implements IUserService {
   }
 
   async deleteUser(userDeleteDto: UserDeleteDto): Promise<RequestResult> {
-    const foundUser = await this.userRepository.findByName(userDeleteDto.name);
+    const foundUser = await this.userRepository.findByName(userDeleteDto.Name);
 
     if (!foundUser){
-      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User with name - ${userDeleteDto.name} don\`t exist.` };
+      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User with name - ${userDeleteDto.Name} don\`t exist.` };
     }
 
     const deletedUser = await this.userRepository.delete(foundUser);
@@ -97,6 +97,6 @@ export class UserService implements IUserService {
       return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
     }
 
-    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User - ${deletedUser.name} has been deleted.` };
+    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User - ${deletedUser.Name} has been deleted.` };
   }
 }

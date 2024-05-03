@@ -11,7 +11,7 @@ export class UserCreateDto {
   @IsString()
   @MinLength(4)
   @AutoMap()
-  name: string;
+  Name: string;
 
   @IsNotEmpty()
   @IsString()
@@ -21,5 +21,5 @@ export class UserCreateDto {
     minNumbers: 2,
   })
   @AutoMap()
-  password: string;
+  Password: string;
 }

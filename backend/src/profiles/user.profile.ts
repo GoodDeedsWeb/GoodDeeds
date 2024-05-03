@@ -16,8 +16,8 @@ export class UserProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, UserCreateDto, User, forMember((destination) => destination.id, ignore()));
-      createMap(mapper, UserLoginDto, User, forMember((destination) => destination.id, ignore()));
+      createMap(mapper, UserCreateDto, User, forMember((destination) => destination.Id, ignore()));
+      createMap(mapper, UserLoginDto, User, forMember((destination) => destination.Id, ignore()));
       createMap(mapper, UserUpdateDto, User);
       createMap(mapper, User, UserDto)
     };

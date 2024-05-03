@@ -14,7 +14,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async findByName(name: string): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { name: name } });
+    return await this.userRepository.findOne({ where: { Name: name } });
   }
 
   async getAll(): Promise<User[]> {
@@ -22,13 +22,13 @@ export class UserRepository implements IUserRepository {
   }
 
   async update(updateUser: User): Promise<number>{
-    const existUser = await this.userRepository.findOne({ where: { id: updateUser.id } });
+    const existUser = await this.userRepository.findOne({ where: { Id: updateUser.Id } });
 
     if (!existUser){
       throw new NotFoundException();
     }
 
-    const updateResult = await this.userRepository.update({ id: updateUser.id }, updateUser);
+    const updateResult = await this.userRepository.update({ Id: updateUser.Id }, updateUser);
 
     return updateResult.affected;
   }

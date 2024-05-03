@@ -12,12 +12,12 @@ export class UserUpdateDto {
   @IsNumber()
   @Min(1)
   @AutoMap()
-  id: number;
+  Id: number;
 
   @IsNotEmpty()
   @IsString()
   @AutoMap()
-  name: string;
+  Name: string;
 
   @IsNotEmpty()
   @IsString()
@@ -27,5 +27,5 @@ export class UserUpdateDto {
     minNumbers: 2,
   })
   @AutoMap()
-  password: string;
+  Password: string;
 }

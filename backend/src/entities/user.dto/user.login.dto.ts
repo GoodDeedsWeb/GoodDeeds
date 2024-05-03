@@ -5,10 +5,10 @@ export class UserLoginDto {
   @IsNotEmpty()
   @IsString()
   @AutoMap()
-  name: string;
+  Name: string;
 
   @IsNotEmpty()
   @IsString()
   @AutoMap()
-  password: string;
+  Password: string;
 }

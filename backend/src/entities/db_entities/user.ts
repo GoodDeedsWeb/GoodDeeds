@@ -1,21 +1,22 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { GoodDeedUser } from './good.deeds.user';
 
 @Entity('Users')
 export class User {
   @PrimaryGeneratedColumn()
   @AutoMap()
-  id: number;
+  Id: number;
 
   @Column({
     nullable: false,
   })
   @AutoMap()
-  name: string;
+  Name: string;
 
   @Column({
     nullable: false,
   })
   @AutoMap()
-  password: string;
+  Password: string;
 }

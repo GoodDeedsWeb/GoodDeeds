@@ -2,8 +2,8 @@ import { AutoMap } from '@automapper/classes';
 
 export class UserDto {
   @AutoMap()
-  name: string;
+  Name: string;
 
   @AutoMap()
-  password: string;
+  Password: string;
 }
