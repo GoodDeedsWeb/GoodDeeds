@@ -2,7 +2,7 @@
 import { Mapper, createMap, forMember, ignore } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/entities/user';
+import { User } from 'src/entities/db_entities/user';
 import { UserCreateDto } from 'src/entities/user.dto/user.create.dto';
 import { UserDto } from 'src/entities/user.dto/user.dto';
 import { UserLoginDto } from 'src/entities/user.dto/user.login.dto';

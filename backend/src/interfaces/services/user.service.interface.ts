@@ -6,9 +6,9 @@ import { UserLoginDto } from 'src/entities/user.dto/user.login.dto';
 import { UserUpdateDto } from 'src/entities/user.dto/user.update.dto';
 
 export interface IUserService {
-  registerUser(userCreateDto: UserCreateDto): RequestResult;
-  loginUser(userLoginDto: UserLoginDto): Jwt | undefined;
-  findUserByName(name: string): UserDto | undefined;
-  getAllUsers(): UserDto[];
-  updateUser(userUpdateDto: UserUpdateDto): RequestResult;
+  registerUser(userCreateDto: UserCreateDto): Promise<RequestResult>;
+  loginUser(userLoginDto: UserLoginDto): Promise<Jwt | undefined>;
+  findUserByName(name: string): Promise<UserDto | undefined>;
+  getAllUsers(): Promise<UserDto[]>;
+  updateUser(userUpdateDto: UserUpdateDto): Promise<RequestResult>;
 }

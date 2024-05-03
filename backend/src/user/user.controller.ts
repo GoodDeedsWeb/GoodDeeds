@@ -14,8 +14,8 @@ export class UserController {
   constructor(@Inject('IUserService') private readonly userService: IUserService) {}
 
   @Post('register')
-  registerUser(@Body() userCreateDto: UserCreateDto, @Res({ passthrough: true }) res: Response): string {
-    const result = this.userService.registerUser(userCreateDto);
+  async registerUser(@Body() userCreateDto: UserCreateDto, @Res({ passthrough: true }) res: Response): Promise<string> {
+    const result = await this.userService.registerUser(userCreateDto);
 
     res.status(result.statusCode);
 
@@ -23,8 +23,8 @@ export class UserController {
   }
 
   @Post('login')
-  loginUser(@Body() userLoginDto: UserLoginDto, @Res({ passthrough: true }) res: Response): Jwt {
-    const token = this.userService.loginUser(userLoginDto);
+  async loginUser(@Body() userLoginDto: UserLoginDto, @Res({ passthrough: true }) res: Response): Promise<Jwt> {
+    const token = await this.userService.loginUser(userLoginDto);
 
     if (token === undefined){
       res.status(HttpStatus.BAD_REQUEST);
@@ -37,20 +37,20 @@ export class UserController {
 
   @UseGuards(AuthenticationGuard)
   @Get()
-  getUser(@Request() req): UserDto {
-    return this.userService.findUserByName(req.user['name']);
+  async getUser(@Request() req): Promise<UserDto> {
+    return await this.userService.findUserByName(req.user['name']);
   }
 
   @UseGuards(AuthenticationGuard)
   @Get('all')
-  getAllUser(): UserDto[] {
-    return this.userService.getAllUsers();
+  async getAllUser(): Promise<UserDto[]> {
+    return await this.userService.getAllUsers();
   }
 
   @UseGuards(AuthenticationGuard)
   @Put('update')
-  updateUser(@Body() userUpdateDto: UserUpdateDto, @Res({ passthrough: true }) res: Response): string {
-    const result = this.userService.updateUser(userUpdateDto);
+  async updateUser(@Body() userUpdateDto: UserUpdateDto, @Res({ passthrough: true }) res: Response): Promise<string> {
+    const result = await this.userService.updateUser(userUpdateDto);
 
     res.status(result.statusCode);
 

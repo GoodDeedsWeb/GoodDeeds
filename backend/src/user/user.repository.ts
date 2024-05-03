@@ -1,55 +1,35 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/db_entities/user';
 import { IUserRepository } from 'src/interfaces/repositories/user.repository.interface';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserRepository implements IUserRepository {  
-  private users: User[] = [
-    {
-      id: 1,
-      name: 'Gleb',
-      password: 'Qwerty',
-    },
-    {
-      id: 2,
-      name: 'Vlad',
-      password: 'vLaD2005',
-    },
-    {
-      id: 3,
-      name: 'Egor',
-      password: 'playZet',
-    },
-  ];
+  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
-  private currentId: number = 3;
-
-  create(newUser: User): number {
-    if (!this.users.every((user) => user.name !== newUser.name)) {
-      return 0;
-    }
-    newUser.id = ++this.currentId;
-    const oldLength = this.users.length;
-    const newLength = this.users.push({ id: newUser.id, name: newUser.name, password: newUser.password });
-    return newLength - oldLength;
+  async create(newUser: User): Promise<User> {
+    return await this.userRepository.save(newUser);
   }
 
-  findByName(name: string): User | undefined {
-    return this.users.find((user) => user.name === name);
+  async findByName(name: string): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { name: name } });
   }
 
-  getAll(): User[] {
-    return this.users;
+  async getAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
-  update(newUser: User): boolean{
-    try{
-      this.users = this.users.map((user) => user.id === newUser.id ? { id: newUser.id, name: newUser.name, password: newUser.password } : user);
-      return true;
+  async update(updateUser: User): Promise<number>{
+    const existUser = await this.userRepository.findOne({ where: { id: updateUser.id } });
+
+    if (!existUser){
+      throw new NotFoundException();
     }
-    catch {
-      return false;
-    }
+
+    const updateResult = await this.userRepository.update({ id: updateUser.id }, updateUser);
+
+    return updateResult.affected;
   }
 }
