@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, HttpStatus, Inject, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
-import { UserUpdateDto } from 'src/entities/user.dto/user.update.dto';
-import { IUserService } from 'src/interfaces/services/user.service.interface';
-import { UserDto } from 'src/entities/user.dto/user.dto';
-import { UserCreateDto } from 'src/entities/user.dto/user.create.dto';
+import { Body, Controller, Get, HttpStatus, Inject, Post, Put, Request, Res, UseGuards } from '@nestjs/common';
+import { UserUpdateDto } from '../entities/user.dto/user.update.dto';
+import { IUserService } from '../interfaces/services/user.service.interface';
+import { UserDto } from '../entities/user.dto/user.dto';
+import { UserCreateDto } from '../entities/user.dto/user.create.dto';
 import { Response } from 'express';
-import { Jwt } from 'src/entities/jwt';
-import { UserLoginDto } from 'src/entities/user.dto/user.login.dto';
+import { Jwt } from '../entities/jwt';
+import { UserLoginDto } from '../entities/user.dto/user.login.dto';
 import { AuthenticationGuard } from './guard/authentication.guard';
 
 @Controller('user')
@@ -35,9 +35,10 @@ export class UserController {
     return token;
   }
 
+  @UseGuards(AuthenticationGuard)
   @Get()
-  getUser(@Query('name') name: string): UserDto {
-    return this.userService.findUserByName(name);
+  getUser(@Request() req): UserDto {
+    return this.userService.findUserByName(req.user['name']);
   }
 
   @UseGuards(AuthenticationGuard)
