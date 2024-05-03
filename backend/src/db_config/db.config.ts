@@ -7,7 +7,9 @@ import {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USERNAME,
-} from 'src/constants/db.properties';
+} from '../constants/db.properties';
+import { GoodDeed } from '../entities/db_entities/good.deed';
+import { GoodDeedUser } from '../entities/db_entities/good.deeds.user';
 
 const config = {
   type: 'postgres',
@@ -16,9 +18,9 @@ const config = {
   username: POSTGRES_USERNAME,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DATABASE,
-  entities: [User],
+  entities: [User, GoodDeed, GoodDeedUser],
   synchronize: false,
-  migrations: ['src/migration/*.js'],
+  migrations: ['src/migration/*.ts'],
   migrationsTableName: 'migrations',
 };
 

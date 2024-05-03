@@ -14,4 +14,9 @@ export class GoodDeed {
   @AutoMap()
   DeedInfo: string;
 
+  @OneToMany(() => GoodDeedUser, (goodDeedUser) => goodDeedUser.GoodDeed, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  GoodDeedsUser: GoodDeedUser[];
 }

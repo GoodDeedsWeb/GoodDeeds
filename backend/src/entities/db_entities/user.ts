@@ -19,4 +19,10 @@ export class User {
   })
   @AutoMap()
   Password: string;
+
+  @OneToMany(() => GoodDeedUser, (goodDeedUser) => goodDeedUser.User, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  GoodDeedsUser: GoodDeedUser[];
 }
