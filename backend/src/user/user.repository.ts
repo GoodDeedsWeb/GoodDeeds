@@ -32,4 +32,8 @@ export class UserRepository implements IUserRepository {
 
     return updateResult.affected;
   }
+
+  async delete(user: User): Promise<User>{
+    return await this.userRepository.remove(user);
+  }
 }

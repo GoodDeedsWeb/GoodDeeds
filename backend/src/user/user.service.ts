@@ -12,6 +12,7 @@ import { UserLoginDto } from 'src/entities/user.dto/user.login.dto';
 import { UserUpdateDto } from 'src/entities/user.dto/user.update.dto';;
 import { IUserRepository } from 'src/interfaces/repositories/user.repository.interface';
 import { IUserService } from 'src/interfaces/services/user.service.interface';
+import { UserDeleteDto } from 'src/entities/user.dto/user.delete.dto';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -81,5 +82,21 @@ export class UserService implements IUserService {
     }
 
     return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User data has been updated.` };
+  }
+
+  async deleteUser(userDeleteDto: UserDeleteDto): Promise<RequestResult> {
+    const foundUser = await this.userRepository.findByName(userDeleteDto.name);
+
+    if (!foundUser){
+      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User with name - ${userDeleteDto.name} don\`t exist.` };
+    }
+
+    const deletedUser = await this.userRepository.delete(foundUser);
+
+    if (!deletedUser){
+      return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
+    }
+
+    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User - ${deletedUser.name} has been deleted.` };
   }
 }
