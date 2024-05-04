@@ -3,9 +3,9 @@ import { Mapper, createMap, forMember, ignore } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { GoodDeed } from 'src/entities/db_entities/good.deed';
-import { GoodDeedCreateDto } from 'src/entities/good.deed.dto/good.deed.create.dto';
-import { GoodDeedDto } from 'src/entities/good.deed.dto/good.deed.dto';
-import { GoodDeedUpdateDto } from 'src/entities/good.deed.dto/good.geed.update.dto';
+import { GoodDeedCreateDto } from 'src/entities/good_deed_dto/good.deed.create.dto';
+import { GoodDeedDto } from 'src/entities/good_deed_dto/good.deed.dto';
+import { GoodDeedUpdateDto } from 'src/entities/good_deed_dto/good.geed.update.dto';
 
 @Injectable()
 export class GoodDeedProfile extends AutomapperProfile {

@@ -2,8 +2,8 @@ import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user';
 import { GoodDeed } from './good.deed';
 
-@Entity('GoodDeesdUsers')
-export class GoodDeedUser {
+@Entity('UsersGoodDeeds')
+export class UserGoodDeed {
   @PrimaryColumn()
   UserId: number;
 
