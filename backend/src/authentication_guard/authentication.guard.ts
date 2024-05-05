@@ -16,7 +16,7 @@ export class AuthenticationGuard implements CanActivate {
     }
 
     try {
-      var decodedToken = this.jwtService.verify(token, { secret: JWT_SECURITY_KEY});
+      var decodedToken = this.jwtService.verify(token, { secret: JWT_SECURITY_KEY });
       request['user'] = decodedToken;
       return true;
     }
