@@ -6,7 +6,7 @@ import { GoodDeedCreateDto } from 'src/entities/good_deed_dto/good.deed.create.d
 import { AuthenticationGuard } from 'src/authentication_guard/authentication.guard';
 import { GoodDeedUpdateDto } from 'src/entities/good_deed_dto/good.geed.update.dto';
 import { GoodDeedDeleteDto } from 'src/entities/good_deed_dto/good.deed.delete.dto';
-import { UserGoodDeedsDto } from 'src/entities/good_deed_dto/user.good.deeds.dto';
+import { GoodDeedDto } from 'src/entities/good_deed_dto/good.deed.dto';
 
 @Controller('good-deed')
 export class GoodDeedController {
@@ -24,7 +24,7 @@ export class GoodDeedController {
 
   @UseGuards(AuthenticationGuard)
   @Get()
-  async getUserGoodDeeds(@Query('userId') userId: string, @Res({ passthrough: true }) res: Response): Promise<UserGoodDeedsDto> {
+  async getUserGoodDeeds(@Query('userId') userId: string, @Res({ passthrough: true }) res: Response): Promise<GoodDeedDto[]> {
     const numberUserId = Number(userId);
 
     if (!numberUserId) {

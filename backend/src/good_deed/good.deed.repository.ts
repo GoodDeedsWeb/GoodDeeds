@@ -7,28 +7,28 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class GoodDeedRepository implements IGoodDeedRepository {  
-  constructor(@InjectRepository(GoodDeed) private readonly goodDeedRepository: Repository<GoodDeed>) {}
+  constructor(@InjectRepository(GoodDeed) private readonly goodDeedStorage: Repository<GoodDeed>) {}
 
     async create(goodDeed: GoodDeed): Promise<GoodDeed> {
-        return await this.goodDeedRepository.save(goodDeed);
+        return await this.goodDeedStorage.save(goodDeed);
     }
 
     async findById(id: number): Promise<GoodDeed | null> {
-        return await this.goodDeedRepository.findOne({ where: { Id: id }, relations: ['User']  });
+        return await this.goodDeedStorage.findOne({ where: { Id: id }, relations: ['User']  });
     }
 
     async findByUserId(userId: number): Promise<GoodDeed[] | null> {
-        return (await this.goodDeedRepository.find({ where: { UserId: userId }, relations: ['User'] }));
+        return (await this.goodDeedStorage.find({ where: { UserId: userId }, relations: ['User'] }));
     }
     
     async update(goodDeed: GoodDeed): Promise<number> {
-        const updateResult = await this.goodDeedRepository.update({ Id: goodDeed.Id }, goodDeed);
+        const updateResult = await this.goodDeedStorage.update({ Id: goodDeed.Id }, goodDeed);
 
         return updateResult.affected;
     }
 
     async delete(goodDeed: GoodDeed): Promise<GoodDeed> {
-        return await this.goodDeedRepository.remove(goodDeed);
+        return await this.goodDeedStorage.remove(goodDeed);
     }
 
 }

@@ -9,7 +9,7 @@ import { GoodDeedCreateDto } from 'src/entities/good_deed_dto/good.deed.create.d
 import { GoodDeedDeleteDto } from 'src/entities/good_deed_dto/good.deed.delete.dto';
 import { Result } from 'src/entities/result';
 import { GoodDeedUpdateDto } from 'src/entities/good_deed_dto/good.geed.update.dto';
-import { UserGoodDeedsDto } from 'src/entities/good_deed_dto/user.good.deeds.dto';
+import { GoodDeedDto } from 'src/entities/good_deed_dto/good.deed.dto';
 import { IUserService } from 'src/interfaces/services/user.service.interface';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class GoodDeedService implements IGoodDeedService {
     @Inject('IUserService') private readonly userService: IUserService,
     @InjectMapper() private readonly mapper: Mapper) {}
 
-    private userGoodDeeds: string[] = []; 
+    private goodDeedList: GoodDeedDto[] = []; 
 
     async createGoodDeed(goodDeedCreate: GoodDeedCreateDto, userId: number): Promise<Result> {
         const goodDeed = this.mapper.map(goodDeedCreate, GoodDeedCreateDto, GoodDeed)
@@ -34,26 +34,26 @@ export class GoodDeedService implements IGoodDeedService {
         return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `Good deed has been created.` };
     }
 
-    async findByUserId(userId: number): Promise<UserGoodDeedsDto | null> {
+    async findByUserId(userId: number): Promise<GoodDeedDto[] | null> {
         const foundUser = await this.userService.findById(userId);
 
         if (!foundUser) {
             return null;
         }
 
-        const goodDeeds = await this.goodDeedRepository.findByUserId(userId);
+        const userGoodDeeds = await this.goodDeedRepository.findByUserId(userId);
 
-        if (!goodDeeds || !goodDeeds[0].User) {
+        if (!userGoodDeeds) {
             return null;
         }
 
-        this.userGoodDeeds.splice(0)
+        this.goodDeedList.splice(0)
 
-        goodDeeds.forEach(element => {
-            this.userGoodDeeds.push(element.GoodDeed);
+        userGoodDeeds.forEach(element => {
+            this.goodDeedList.push({ GoodDeed: element.GoodDeed });
         });
 
-        return { Username: goodDeeds[0].User.Name, GoodDeeds: this.userGoodDeeds }
+        return this.goodDeedList;
     }
 
     async updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto): Promise<Result> {
