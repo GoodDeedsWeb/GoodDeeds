@@ -18,12 +18,14 @@ export class UserFriend {
 
   @ManyToOne(() => User, (user) => user.Users, {
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'UserId', referencedColumnName: 'Id' }])
   User: User;
 
   @ManyToOne(() => User, (user) => user.Friends, {
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'FriendId', referencedColumnName: 'Id' }])
   Friend: User;

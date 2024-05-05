@@ -28,6 +28,7 @@ export class GoodDeed {
 
   @ManyToOne(() => User, (user) => user.GoodDeeds, {
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'UserId', referencedColumnName: 'Id' }])
   User: User;
