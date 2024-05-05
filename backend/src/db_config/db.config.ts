@@ -9,7 +9,6 @@ import {
   POSTGRES_USERNAME,
 } from '../constants/db.properties';
 import { GoodDeed } from '../entities/db_entities/good.deed';
-import { UserGoodDeed } from '../entities/db_entities/user.good.deeds';
 
 const config = {
   type: 'postgres',
@@ -18,7 +17,7 @@ const config = {
   username: POSTGRES_USERNAME,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DATABASE,
-  entities: [User, GoodDeed, UserGoodDeed],
+  entities: [User, GoodDeed],
   synchronize: false,
   migrations: ['dist/migration/*.js'],
   migrationsTableName: 'migrations',

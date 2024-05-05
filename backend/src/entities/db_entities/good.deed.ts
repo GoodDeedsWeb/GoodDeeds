@@ -1,6 +1,12 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { UserGoodDeed } from './user.good.deeds';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from './user';
 
 @Entity('GoodDeeds')
 export class GoodDeed {
@@ -12,11 +18,17 @@ export class GoodDeed {
     nullable: false,
   })
   @AutoMap()
-  DeedInfo: string;
+  UserId: number;
 
-  @OneToMany(() => UserGoodDeed, (goodDeedUser) => goodDeedUser.GoodDeed, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+  @Column({
+    nullable: false,
   })
-  GoodDeedsUser: UserGoodDeed[];
+  @AutoMap()
+  GoodDeed: string;
+
+  @ManyToOne(() => User, (user) => user.GoodDeeds, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'UserId', referencedColumnName: 'Id' }])
+  User: User;
 }
