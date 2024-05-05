@@ -2,16 +2,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { AutoMapperModule } from './automapper/autoMapper.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import dbConfig from './db_config/db.config'
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';;
+import { GoodDeedModule } from './good_deed/good.deed.module';
 
 @Module({
   imports: [
-    UserModule, 
+    UserModule,
+    GoodDeedModule,
     AutoMapperModule, 
     ConfigModule.forRoot({
       isGlobal: true, 
@@ -23,6 +24,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }), 
   ],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService],
 })
 export class AppModule {}
