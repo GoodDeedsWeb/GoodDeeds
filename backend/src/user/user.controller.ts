@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Post, Put, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
 import { UserUpdateDto } from '../entities/user_dto/user.update.dto';
 import { IUserService } from '../interfaces/services/user.service.interface';
 import { UserDto } from '../entities/user_dto/user.dto';
@@ -38,8 +38,15 @@ export class UserController {
 
   @UseGuards(AuthenticationGuard)
   @Get()
-  async getUser(@Request() req, @Res({ passthrough: true }) res: Response): Promise<UserDto> {
-    const user = await this.userService.findByName(req.user['name']);
+  async getUser(@Query('userId') userId: string, @Res({ passthrough: true }) res: Response): Promise<UserDto> {
+    const numberUserId = Number(userId);
+
+    if (!numberUserId) {
+      res.status(HttpStatus.BAD_REQUEST);
+      return;
+    }
+
+    const user = await this.userService.findById(numberUserId);
 
     if (!user) {
       res.status(HttpStatus.NOT_FOUND);

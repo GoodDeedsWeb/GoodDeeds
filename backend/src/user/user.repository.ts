@@ -7,31 +7,31 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserRepository implements IUserRepository {  
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+  constructor(@InjectRepository(User) private readonly userStorage: Repository<User>) {}
 
   async create(user: User): Promise<User> {
-    return await this.userRepository.save(user);
+    return await this.userStorage.save(user);
   }
 
   async findById(id: number): Promise<User> {
-    return await this.userRepository.findOne({ where: { Id: id } }); 
+    return await this.userStorage.findOne({ where: { Id: id } }); 
   }
 
   async findByName(name: string): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { Name: name } });
+    return await this.userStorage.findOne({ where: { Name: name } });
   }
 
   async getAll(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userStorage.find();
   }
 
   async update(user: User): Promise<number>{
-    const updateResult = await this.userRepository.update({ Id: user.Id }, user);
+    const updateResult = await this.userStorage.update({ Id: user.Id }, user);
 
     return updateResult.affected;
   }
 
   async delete(user: User): Promise<User>{
-    return await this.userRepository.remove(user);
+    return await this.userStorage.remove(user);
   }
 }
