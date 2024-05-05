@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Inject, Post, Put, Query, Re
 import { Response } from 'express';
 import { IGoodDeedService } from 'src/interfaces/services/good.deed.service.interface';
 import { GoodDeedCreateDto } from 'src/entities/good_deed_dto/good.deed.create.dto';
-import { AuthenticationGuard } from 'src/user/guard/authentication.guard';
+import { AuthenticationGuard } from 'src/authentication_guard/authentication.guard';
 import { GoodDeedUpdateDto } from 'src/entities/good_deed_dto/good.geed.update.dto';
 import { GoodDeedDeleteDto } from 'src/entities/good_deed_dto/good.deed.delete.dto';
 import { UserGoodDeedsDto } from 'src/entities/good_deed_dto/user.good.deeds.dto';

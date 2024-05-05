@@ -3,24 +3,17 @@ import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserRepository } from './user.repository';
-import { JwtModule } from '@nestjs/jwt';
-import { JWT_SECURITY_KEY } from '../constants/jwt.security.key';
-import { AuthenticationGuard } from './guard/authentication.guard';
 import { USER_REPOSITORY_TOKEN, USER_SERVICE_TOKEN } from '../constants/user.tokens';
-import { AUTH_GUARD } from '../constants/guards';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../entities/db_entities/user';
 import { UserProfile } from './profiles/user.profile';
+import { AuthenticationGuardModule } from 'src/authentication_guard/authentication.guard.module';
 
 
 @Module({
   imports: [
-    JwtModule.register({
-      global: false,
-      secret: JWT_SECURITY_KEY,
-      signOptions: { expiresIn: '600s' },
-    }),
-    TypeOrmModule.forFeature([User]),
+  AuthenticationGuardModule,
+  TypeOrmModule.forFeature([User]),
   ],
   providers: [
     UserProfile,
@@ -32,12 +25,8 @@ import { UserProfile } from './profiles/user.profile';
       provide: USER_REPOSITORY_TOKEN,
       useClass: UserRepository,
     },
-    {
-      provide: AUTH_GUARD,
-      useClass: AuthenticationGuard,
-    },
   ],
   controllers: [UserController],
-  exports: [USER_SERVICE_TOKEN, USER_REPOSITORY_TOKEN, AUTH_GUARD, JwtModule],
+  exports: [USER_SERVICE_TOKEN, USER_REPOSITORY_TOKEN],
 })
 export class UserModule {}

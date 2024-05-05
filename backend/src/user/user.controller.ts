@@ -7,7 +7,7 @@ import { UserCreateDto } from '../entities/user_dto/user.create.dto';
 import { Response } from 'express';
 import { Jwt } from '../entities/jwt';
 import { UserLoginDto } from '../entities/user_dto/user.login.dto';
-import { AuthenticationGuard } from './guard/authentication.guard';
+import { AuthenticationGuard } from '../authentication_guard/authentication.guard';
 import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
 
 @Controller('user')

@@ -8,12 +8,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import dbConfig from './db_config/db.config'
 import { TypeOrmModule } from '@nestjs/typeorm';;
 import { GoodDeedModule } from './good_deed/good.deed.module';
+import { AuthenticationGuardModule } from './authentication_guard/authentication.guard.module';
 
 @Module({
   imports: [
     UserModule,
     GoodDeedModule,
     AutoMapperModule, 
+    AuthenticationGuardModule,
     ConfigModule.forRoot({
       isGlobal: true, 
       load: [dbConfig]

@@ -8,9 +8,11 @@ import { GoodDeedService } from './good.deed.service';
 import { GoodDeedController } from './good.deed.controller';
 import { GoodDeedRepository } from './good.deed.repository';
 import { GoodDeedProfile } from './profiles/good.deed.profile';
+import { AuthenticationGuardModule } from 'src/authentication_guard/authentication.guard.module';
 
 @Module({
   imports: [
+    AuthenticationGuardModule,
     UserModule,
     TypeOrmModule.forFeature([GoodDeed]),
   ],
