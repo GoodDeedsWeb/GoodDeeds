@@ -4,15 +4,15 @@ import { InjectMapper } from '@automapper/nestjs';
 import { HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Jwt } from 'src/entities/jwt';
-import { RequestResult } from 'src/entities/request.result';
+import { Result } from 'src/entities/result';
 import { User } from 'src/entities/db_entities/user';
-import { UserCreateDto } from 'src/entities/user.dto/user.create.dto';
-import { UserDto } from 'src/entities/user.dto/user.dto';
-import { UserLoginDto } from 'src/entities/user.dto/user.login.dto';
-import { UserUpdateDto } from 'src/entities/user.dto/user.update.dto';;
+import { UserCreateDto } from 'src/entities/user_dto/user.create.dto';
+import { UserDto } from 'src/entities/user_dto/user.dto';
+import { UserLoginDto } from 'src/entities/user_dto/user.login.dto';
+import { UserUpdateDto } from 'src/entities/user_dto/user.update.dto';;
 import { IUserRepository } from 'src/interfaces/repositories/user.repository.interface';
 import { IUserService } from 'src/interfaces/services/user.service.interface';
-import { UserDeleteDto } from 'src/entities/user.dto/user.delete.dto';
+import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -20,37 +20,32 @@ export class UserService implements IUserService {
     private readonly jwtService: JwtService,
     @InjectMapper() private readonly mapper: Mapper) {}
 
-  async registerUser(userCreateDto: UserCreateDto): Promise<RequestResult> {
-    // TODO: сделать валидацию
-    if (userCreateDto.Name.length <= 1 || userCreateDto.Name === undefined || userCreateDto.Password.length <= 1 || userCreateDto.Password === undefined) {
-      return { isSuccess: false, statusCode: HttpStatus.BAD_REQUEST, message: 'Incorrect name or password.' };
-    }
-    
-    const foundUser = await this.userRepository.findByName(userCreateDto.Name);
+  async registerUser(userCreate: UserCreateDto): Promise<Result> {
+    const foundUser = await this.userRepository.findByName(userCreate.Name);
 
     if (foundUser) {
-      return { isSuccess: false, statusCode: HttpStatus.CONFLICT, message: `User with name - ${userCreateDto.Name} already exist.` };
+      return { isSuccess: false, statusCode: HttpStatus.CONFLICT, message: `User already exist.` };
     }
 
-    const user = this.mapper.map(userCreateDto, UserCreateDto, User)
+    const user = this.mapper.map(userCreate, UserCreateDto, User)
 
     const newUser = await this.userRepository.create(user);
 
-    if (!newUser){
+    if (!newUser) {
       return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
     }
 
-    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User - ${newUser.Name} has been created.` };
+    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User has been created.` };
   }
 
-  async loginUser(userLoginDto: UserLoginDto): Promise<Jwt | undefined> {
-    const user = await this.userRepository.findByName(userLoginDto.Name);
+  async loginUser(userLogin: UserLoginDto): Promise<Jwt | null> {
+    const user = await this.userRepository.findByName(userLogin.Name);
 
     if (!user) {
-      return undefined;
+      return null;
     }
 
-    if (user.Password !== userLoginDto.Password) {
+    if (user.Password !== userLogin.Password) {
       throw new UnauthorizedException('Password is incorrect.');
     }
 
@@ -60,43 +55,55 @@ export class UserService implements IUserService {
     return { token: token };
   }
 
-  async findUserByName(name: string): Promise<UserDto | undefined> {
+  async findById(userId: number): Promise<UserDto | null> {
+    const user = await this.userRepository.findById(userId);
+
+    return this.mapper.map(user, User, UserDto);
+  }
+
+  async findByName(name: string): Promise<UserDto | null> {
     const user = await this.userRepository.findByName(name);
 
     return this.mapper.map(user, User, UserDto);
   }
 
-  async getAllUsers(): Promise<UserDto[]> {
+  async getAll(): Promise<UserDto[]> {
     const users = await this.userRepository.getAll();
 
     return users.map((user) => this.mapper.map(user, User, UserDto));
   }
 
-  async updateUser(userUpdateDto: UserUpdateDto): Promise<RequestResult>{
-    const updateUser = this.mapper.map(userUpdateDto, UserUpdateDto, User);
+  async updateUser(userUpdate: UserUpdateDto): Promise<Result> {
+    const existUser = await this.userRepository.findById(userUpdate.Id);
+
+    if (!existUser){
+      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist.` };
+    }
+
+    const updateUser = this.mapper.map(userUpdate, UserUpdateDto, User);
 
     const countUpdatedUser = await this.userRepository.update(updateUser);
 
-    if (countUpdatedUser != 1){
+    if (countUpdatedUser != 1) {
       return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
     }
 
     return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User data has been updated.` };
   }
 
-  async deleteUser(userDeleteDto: UserDeleteDto): Promise<RequestResult> {
-    const foundUser = await this.userRepository.findByName(userDeleteDto.Name);
+  async deleteUser(userDelete: UserDeleteDto): Promise<Result> {
+    const foundUser = await this.userRepository.findByName(userDelete.Name);
 
-    if (!foundUser){
-      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User with name - ${userDeleteDto.Name} don\`t exist.` };
+    if (!foundUser) {
+      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist.` };
     }
 
     const deletedUser = await this.userRepository.delete(foundUser);
 
-    if (!deletedUser){
+    if (!deletedUser) {
       return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
     }
 
-    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User - ${deletedUser.Name} has been deleted.` };
+    return { isSuccess: true, statusCode: HttpStatus.OK, message: `User - ${deletedUser.Name} has been deleted.` };
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/db_entities/user';
 import { IUserRepository } from 'src/interfaces/repositories/user.repository.interface';
@@ -9,8 +9,12 @@ import { Repository } from 'typeorm';
 export class UserRepository implements IUserRepository {  
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
-  async create(newUser: User): Promise<User> {
-    return await this.userRepository.save(newUser);
+  async create(user: User): Promise<User> {
+    return await this.userRepository.save(user);
+  }
+
+  async findById(id: number): Promise<User> {
+    return await this.userRepository.findOne({ where: { Id: id } }); 
   }
 
   async findByName(name: string): Promise<User | null> {
@@ -21,14 +25,8 @@ export class UserRepository implements IUserRepository {
     return await this.userRepository.find();
   }
 
-  async update(updateUser: User): Promise<number>{
-    const existUser = await this.userRepository.findOne({ where: { Id: updateUser.Id } });
-
-    if (!existUser){
-      throw new NotFoundException();
-    }
-
-    const updateResult = await this.userRepository.update({ Id: updateUser.Id }, updateUser);
+  async update(user: User): Promise<number>{
+    const updateResult = await this.userRepository.update({ Id: user.Id }, user);
 
     return updateResult.affected;
   }

@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Post, Put, Request, Res, UseGuards } from '@nestjs/common';
-import { UserUpdateDto } from '../entities/user.dto/user.update.dto';
+import { UserUpdateDto } from '../entities/user_dto/user.update.dto';
 import { IUserService } from '../interfaces/services/user.service.interface';
-import { UserDto } from '../entities/user.dto/user.dto';
-import { UserCreateDto } from '../entities/user.dto/user.create.dto';
+import { UserDto } from '../entities/user_dto/user.dto';
+import { UserCreateDto } from '../entities/user_dto/user.create.dto';
 import { Response } from 'express';
 import { Jwt } from '../entities/jwt';
-import { UserLoginDto } from '../entities/user.dto/user.login.dto';
+import { UserLoginDto } from '../entities/user_dto/user.login.dto';
 import { AuthenticationGuard } from './guard/authentication.guard';
-import { UserDeleteDto } from 'src/entities/user.dto/user.delete.dto';
+import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
 
 @Controller('user')
 export class UserController {
@@ -27,7 +27,7 @@ export class UserController {
   async loginUser(@Body() userLoginDto: UserLoginDto, @Res({ passthrough: true }) res: Response): Promise<Jwt> {
     const token = await this.userService.loginUser(userLoginDto);
 
-    if (token === undefined){
+    if (!token){
       res.status(HttpStatus.BAD_REQUEST);
       return;
     }
@@ -37,21 +37,29 @@ export class UserController {
   }
 
   @UseGuards(AuthenticationGuard)
-  @HttpCode(HttpStatus.OK)
   @Get()
-  async getUser(@Request() req): Promise<UserDto> {
-    return await this.userService.findUserByName(req.user['name']);
+  async getUser(@Request() req, @Res({ passthrough: true }) res: Response): Promise<UserDto> {
+    const user = await this.userService.findByName(req.user['name']);
+
+    if (!user) {
+      res.status(HttpStatus.NOT_FOUND);
+      return;
+    }
+    
+    res.status(HttpStatus.OK);
+    return user;
   }
 
   @UseGuards(AuthenticationGuard)
   @HttpCode(HttpStatus.OK)
   @Get('all')
   async getAllUser(): Promise<UserDto[]> {
-    return await this.userService.getAllUsers();
+    return await this.userService.getAll();
   }
 
+  // TODO: сделать токен не валидный и отдать новый
   @UseGuards(AuthenticationGuard)
-  @Put('update')
+  @Put()
   async updateUser(@Body() userUpdateDto: UserUpdateDto, @Res({ passthrough: true }) res: Response): Promise<string> {
     const result = await this.userService.updateUser(userUpdateDto);
 
@@ -61,7 +69,7 @@ export class UserController {
   }
 
   @UseGuards(AuthenticationGuard)
-  @Delete('delete')
+  @Delete()
   async deleteUser(@Body() userDeleteDto: UserDeleteDto, @Res({ passthrough: true }) res: Response): Promise<string> {
     const result = await this.userService.deleteUser(userDeleteDto);
 

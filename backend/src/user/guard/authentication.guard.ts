@@ -11,7 +11,7 @@ export class AuthenticationGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const token = this.getJwtTokenFromRequest(request);
-    if (token === undefined){
+    if (!token) {
       throw new UnauthorizedException();
     }
 
@@ -20,20 +20,20 @@ export class AuthenticationGuard implements CanActivate {
       request['user'] = decodedToken;
       return true;
     }
-    catch(err){
+    catch(err) {
       throw new ForbiddenException();
     }
   }
 
-  private getJwtTokenFromRequest(request: Request): string | undefined {
+  private getJwtTokenFromRequest(request: Request): string | null {
     const authorizationField = request.headers['authorization']; 
 
-    if (authorizationField === undefined){
-      return undefined;
+    if (!authorizationField){
+      return null;
     }
 
     const [type, token] = authorizationField.split(' ');
     
-    return type === 'Bearer' ? token : undefined;
+    return type === 'Bearer' ? token : null;
   }
 }
