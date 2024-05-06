@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, HttpStatus, Inject, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Inject, Post, Query, Request, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthenticationGuard } from 'src/authentication_guard/authentication.guard';
 import { UserFriendCreateDto } from 'src/entities/user_friend_dto/user.friend.create.dto';
@@ -13,8 +13,8 @@ export class UserFriendController {
 
   @UseGuards(AuthenticationGuard)
   @Post()
-  async addFriend(@Body() userFriendCreate: UserFriendCreateDto, @Res({ passthrough: true }) res: Response): Promise<string> {
-    const result = await this.userFriendService.createUserFriend(userFriendCreate);
+  async addFriend(@Body() userFriendCreate: UserFriendCreateDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<string> {
+    const result = await this.userFriendService.createUserFriend(userFriendCreate, req.user['sub']);
 
     res.status(result.statusCode);
 
@@ -24,14 +24,12 @@ export class UserFriendController {
   @UseGuards(AuthenticationGuard)
   @Get()
   async findByUserId(@Query('userId') userId: string, @Res({ passthrough: true }) res: Response): Promise<UserFriendDto[]> {
-    const numberUserId = Number(userId);
-
-    if (!numberUserId) {
+    if (!userId) {
       res.status(HttpStatus.BAD_REQUEST);
       return;
     }
 
-    const userFriends = await this.userFriendService.findByUserId(Number(userId));
+    const userFriends = await this.userFriendService.findByUserId(userId);
 
     if (!userFriends) {
       res.status(HttpStatus.NOT_FOUND);
@@ -43,8 +41,8 @@ export class UserFriendController {
 
   @UseGuards(AuthenticationGuard)
   @Delete()
-  async deleteUserFriend(@Body() userFriendDeleteDto: UserFriendDeleteDto, @Res({ passthrough: true }) res: Response): Promise<string> {
-    const result = await this.userFriendService.deleteUserFriend(userFriendDeleteDto);
+  async deleteUserFriend(@Body() userFriendDeleteDto: UserFriendDeleteDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<string> {
+    const result = await this.userFriendService.deleteUserFriend(userFriendDeleteDto, req.user['sub']);
 
     res.status(result.statusCode);
 

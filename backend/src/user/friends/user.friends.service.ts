@@ -7,6 +7,7 @@ import { Result } from 'src/entities/result';
 import { UserFriendCreateDto } from 'src/entities/user_friend_dto/user.friend.create.dto';
 import { UserFriendDeleteDto } from 'src/entities/user_friend_dto/user.friend.delete.dto';
 import { UserFriendDto } from 'src/entities/user_friend_dto/user.friend.dto';
+import { UserFriendSearchDto } from 'src/entities/user_friend_dto/user.friend.search.dto';
 import { IUserFriendRepository } from 'src/interfaces/repositories/user.friend.repository.interface';
 import { IUserFriendService } from 'src/interfaces/services/user.friend.service.interfaces';
 import { IUserService } from 'src/interfaces/services/user.service.interface';
@@ -19,8 +20,10 @@ export class UserFriendService implements IUserFriendService {
 
     private friendList: UserFriendDto[] = [];
     
-    async createUserFriend(userFriendCreateDto: UserFriendCreateDto): Promise<Result> {
+    async createUserFriend(userFriendCreateDto: UserFriendCreateDto, userId: string): Promise<Result> {
         const userFriend = this.mapper.map(userFriendCreateDto, UserFriendCreateDto, UserFriend)
+
+        userFriend.UserId = userId;
 
         const isSuccess = await this.userFriendRepository.create(userFriend);
 
@@ -31,7 +34,7 @@ export class UserFriendService implements IUserFriendService {
         return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `Friend has been added.` };
     }
 
-    async findByUserId(userId: number): Promise<UserFriendDto[] | null> {
+    async findByUserId(userId: string): Promise<UserFriendDto[] | null> {
         const foundUser = await this.userService.findById(userId);
 
         if (!foundUser) {
@@ -47,14 +50,24 @@ export class UserFriendService implements IUserFriendService {
         this.friendList.splice(0)
 
         userFriends.forEach(element => {
-            this.friendList.push({ FriendsId: element.Friend.Id, FriendsName: element.Friend.Name });
+            this.friendList.push({ FriendId: element.Friend.Id, FriendName: element.Friend.Name });
         });
 
         return this.friendList;
     }
 
-    async deleteUserFriend(userFriendDeleteDto: UserFriendDeleteDto): Promise<Result> {
+    async isFriendship(userFriendSearch: UserFriendSearchDto): Promise<boolean> {
+        const userFriend = this.mapper.map(userFriendSearch, UserFriendSearchDto, UserFriend);
+
+        const foundUserFriend = await this.userFriendRepository.findUserFriend(userFriend);
+
+        return foundUserFriend ? true : false;
+    }
+
+    async deleteUserFriend(userFriendDeleteDto: UserFriendDeleteDto, userId: string): Promise<Result> {
         const userFriend = this.mapper.map(userFriendDeleteDto, UserFriendDeleteDto, UserFriend)
+
+        userFriend.UserId = userId;
 
         const foundUserFriend = await this.userFriendRepository.findUserFriend(userFriend);
 

@@ -9,13 +9,11 @@ import dbConfig from './db_config/db.config'
 import { TypeOrmModule } from '@nestjs/typeorm';;
 import { GoodDeedModule } from './good_deed/good.deed.module';
 import { AuthenticationGuardModule } from './authentication_guard/authentication.guard.module';
-import { UserFriendModule } from './user_friends/user.friend.module';
 
 @Module({
   imports: [
     UserModule,
     GoodDeedModule,
-    UserFriendModule,
     AutoMapperModule, 
     AuthenticationGuardModule,
     ConfigModule.forRoot({
