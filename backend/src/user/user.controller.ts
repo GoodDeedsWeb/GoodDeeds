@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Post, Put, Query, Request, Res, UseGuards } from '@nestjs/common';
 import { UserUpdateDto } from '../entities/user_dto/user.update.dto';
 import { IUserService } from '../interfaces/services/user.service.interface';
 import { UserDto } from '../entities/user_dto/user.dto';
 import { UserCreateDto } from '../entities/user_dto/user.create.dto';
 import { Response } from 'express';
-import { Jwt } from '../entities/jwt';
 import { UserLoginDto } from '../entities/user_dto/user.login.dto';
 import { AuthenticationGuard } from '../authentication_guard/authentication.guard';
 import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
+import { LoginResponse } from 'src/entities/login.response';
 
 @Controller('user')
 export class UserController {
@@ -24,16 +24,19 @@ export class UserController {
   }
 
   @Post('login')
-  async loginUser(@Body() userLoginDto: UserLoginDto, @Res({ passthrough: true }) res: Response): Promise<Jwt> {
-    const token = await this.userService.loginUser(userLoginDto);
+  async loginUser(@Body() userLoginDto: UserLoginDto, @Res({ passthrough: true }) res: Response): Promise<LoginResponse> {
+    const loginResponse = await this.userService.loginUser(userLoginDto);
 
-    if (!token){
+    const token = loginResponse.Jwt;
+    const userId = loginResponse.UserId; 
+
+    if (!token || !userId){
       res.status(HttpStatus.BAD_REQUEST);
       return;
     }
 
     res.status(HttpStatus.OK);
-    return token;
+    return loginResponse;
   }
 
   @UseGuards(AuthenticationGuard)
