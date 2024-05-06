@@ -3,7 +3,6 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Jwt } from 'src/entities/jwt';
 import { Result } from 'src/entities/result';
 import { User } from 'src/entities/db_entities/user';
 import { UserCreateDto } from 'src/entities/user_dto/user.create.dto';
@@ -13,6 +12,8 @@ import { UserUpdateDto } from 'src/entities/user_dto/user.update.dto';;
 import { IUserRepository } from 'src/interfaces/repositories/user.repository.interface';
 import { IUserService } from 'src/interfaces/services/user.service.interface';
 import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
+import { LoginResponse } from 'src/entities/login.response';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -21,13 +22,15 @@ export class UserService implements IUserService {
     @InjectMapper() private readonly mapper: Mapper) {}
 
   async registerUser(userCreate: UserCreateDto): Promise<Result> {
-    const foundUser = await this.userRepository.findByName(userCreate.Name);
+    const foundUser = await this.userRepository.findByEmail(userCreate.Email);
 
     if (foundUser) {
-      return { isSuccess: false, statusCode: HttpStatus.CONFLICT, message: `User already exist.` };
+      return { isSuccess: false, statusCode: HttpStatus.BAD_REQUEST, message: `User with email ${userCreate.Email} already exist.` };
     }
 
     const user = this.mapper.map(userCreate, UserCreateDto, User)
+
+    user.Id = randomBytes(5).toString('base64');
 
     const newUser = await this.userRepository.create(user);
 
@@ -38,8 +41,8 @@ export class UserService implements IUserService {
     return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User has been created.` };
   }
 
-  async loginUser(userLogin: UserLoginDto): Promise<Jwt | null> {
-    const user = await this.userRepository.findByName(userLogin.Name);
+  async loginUser(userLogin: UserLoginDto): Promise<LoginResponse | null> {
+    const user = await this.userRepository.findByEmail(userLogin.Email);
 
     if (!user) {
       return null;
@@ -49,10 +52,10 @@ export class UserService implements IUserService {
       throw new UnauthorizedException('Password is incorrect.');
     }
 
-    const payload = { sub: user.Id, name: user.Name };
+    const payload = { sub: user.Id };
     const token = this.jwtService.sign(payload);
 
-    return { token: token };
+    return { Jwt: token, UserId: user.Id };
   }
 
   async findById(userId: string): Promise<UserDto | null> {
@@ -67,7 +70,13 @@ export class UserService implements IUserService {
     return this.mapper.map(user, User, UserDto);
   }
 
-  async getAll(): Promise<UserDto[]> {
+  async findByEmail(email: string): Promise<UserDto> {
+    const user = await this.userRepository.findByEmail(email);
+
+    return this.mapper.map(user, User, UserDto);
+  }
+
+  async getAll(): Promise<UserDto[] | null> {
     const users = await this.userRepository.getAll();
 
     return users.map((user) => this.mapper.map(user, User, UserDto));
@@ -94,7 +103,7 @@ export class UserService implements IUserService {
   }
 
   async deleteUser(userDelete: UserDeleteDto): Promise<Result> {
-    const foundUser = await this.userRepository.findByName(userDelete.Name);
+    const foundUser = await this.userRepository.findByEmail(userDelete.Email);
 
     if (!foundUser) {
       return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist.` };

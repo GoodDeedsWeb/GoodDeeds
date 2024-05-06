@@ -61,15 +61,21 @@ export class UserController {
   @UseGuards(AuthenticationGuard)
   @HttpCode(HttpStatus.OK)
   @Get('all')
-  async getAllUser(): Promise<UserDto[]> {
-    return await this.userService.getAll();
+  async getAllUser(@Res({ passthrough: true }) res: Response): Promise<UserDto[]> {
+    const users = await this.userService.getAll();
+
+    if (!users) {
+      res.status(HttpStatus.NOT_FOUND);
+      return;
+    }
+
+    return users;
   }
 
-  // TODO: сделать токен не валидный и отдать новый
   @UseGuards(AuthenticationGuard)
   @Put()
-  async updateUser(@Body() userUpdateDto: UserUpdateDto, @Res({ passthrough: true }) res: Response): Promise<string> {
-    const result = await this.userService.updateUser(userUpdateDto);
+  async updateUser(@Body() userUpdateDto: UserUpdateDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<string> {
+    const result = await this.userService.updateUser(userUpdateDto, req.user['sub']);
 
     res.status(result.statusCode);
 
