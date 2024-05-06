@@ -1,18 +1,16 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsEmail,
   IsNotEmpty,
-  IsNumber,
   IsString,
   IsStrongPassword,
-  Min,
 } from 'class-validator';
 
 export class UserUpdateDto {
   @IsNotEmpty()
-  @IsNumber()
-  @Min(1)
+  @IsEmail()
   @AutoMap()
-  Id: number;
+  Email: string;
 
   @IsNotEmpty()
   @IsString()

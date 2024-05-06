@@ -8,13 +8,13 @@ export class UserFriend {
     nullable: false,
   })
   @AutoMap()
-  UserId: number;
+  UserId: string;
 
   @PrimaryColumn({
     nullable: false,
   })
   @AutoMap()
-  FriendId: number;
+  FriendId: string;
 
   @ManyToOne(() => User, (user) => user.Users, {
     onDelete: 'CASCADE',

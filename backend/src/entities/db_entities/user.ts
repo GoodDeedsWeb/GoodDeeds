@@ -1,13 +1,20 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { GoodDeed } from './good.deed';
 import { UserFriend } from './user.friend';
 
 @Entity('Users')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ length: 15 })
   @AutoMap()
-  Id: number;
+  Id: string;
+
+  @Column({
+    nullable: false,
+    unique: true,
+  })
+  @AutoMap()
+  Email: string;
 
   @Column({
     nullable: false,

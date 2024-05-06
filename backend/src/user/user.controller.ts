@@ -39,14 +39,12 @@ export class UserController {
   @UseGuards(AuthenticationGuard)
   @Get()
   async getUser(@Query('userId') userId: string, @Res({ passthrough: true }) res: Response): Promise<UserDto> {
-    const numberUserId = Number(userId);
-
-    if (!numberUserId) {
+    if (!userId) {
       res.status(HttpStatus.BAD_REQUEST);
       return;
     }
 
-    const user = await this.userService.findById(numberUserId);
+    const user = await this.userService.findById(userId);
 
     if (!user) {
       res.status(HttpStatus.NOT_FOUND);

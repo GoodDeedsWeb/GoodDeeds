@@ -18,7 +18,7 @@ export class GoodDeed {
     nullable: false,
   })
   @AutoMap()
-  UserId: number;
+  UserId: string;
 
   @Column({
     nullable: false,

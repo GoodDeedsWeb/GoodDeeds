@@ -1,16 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class UserFriendCreateDto {
   @IsNotEmpty()
-  @IsNumber()
-  @Min(1)
+  @IsString()
   @AutoMap()
-  UserId: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @Min(1)
-  @AutoMap()
-  FriendId: number;
+  FriendId: string;
 }

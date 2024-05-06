@@ -1,11 +1,11 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class UserLoginDto {
   @IsNotEmpty()
-  @IsString()
+  @IsEmail()
   @AutoMap()
-  Name: string;
+  Email: string;
 
   @IsNotEmpty()
   @IsString()

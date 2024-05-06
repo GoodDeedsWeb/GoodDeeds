@@ -55,7 +55,7 @@ export class UserService implements IUserService {
     return { token: token };
   }
 
-  async findById(userId: number): Promise<UserDto | null> {
+  async findById(userId: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(userId);
 
     return this.mapper.map(user, User, UserDto);
@@ -73,14 +73,16 @@ export class UserService implements IUserService {
     return users.map((user) => this.mapper.map(user, User, UserDto));
   }
 
-  async updateUser(userUpdate: UserUpdateDto): Promise<Result> {
-    const existUser = await this.userRepository.findById(userUpdate.Id);
+  async updateUser(userUpdate: UserUpdateDto, userId: string): Promise<Result> {
+    const existUser = await this.userRepository.findById(userId);
 
     if (!existUser){
       return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist.` };
     }
 
     const updateUser = this.mapper.map(userUpdate, UserUpdateDto, User);
+
+    updateUser.Id = userId;
 
     const countUpdatedUser = await this.userRepository.update(updateUser);
 

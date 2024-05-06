@@ -1,4 +1,4 @@
 export class UserFriendDto {
-  FriendsId: number;
-  FriendsName: string;
+  FriendId: string;
+  FriendName: string;
 }

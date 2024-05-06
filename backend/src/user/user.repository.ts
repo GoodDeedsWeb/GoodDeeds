@@ -13,7 +13,7 @@ export class UserRepository implements IUserRepository {
     return await this.userStorage.save(user);
   }
 
-  async findById(id: number): Promise<User> {
+  async findById(id: string): Promise<User> {
     return await this.userStorage.findOne({ where: { Id: id } }); 
   }
 

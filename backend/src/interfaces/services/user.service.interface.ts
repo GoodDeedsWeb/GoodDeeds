@@ -10,6 +10,7 @@ export interface IUserService {
   registerUser(userCreate: UserCreateDto): Promise<Result>;
   loginUser(userLogin: UserLoginDto): Promise<Jwt | null>;
   findById(userId: number): Promise<UserDto | null>;
+  findById(userId: string): Promise<UserDto | null>;
   findByName(name: string): Promise<UserDto | null>;
   getAll(): Promise<UserDto[]>;
   updateUser(userUpdate: UserUpdateDto): Promise<Result>;

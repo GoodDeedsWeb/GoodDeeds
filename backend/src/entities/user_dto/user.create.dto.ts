@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsEmail,
   IsNotEmpty,
   IsString,
   IsStrongPassword,
@@ -7,6 +8,11 @@ import {
 } from 'class-validator';
 
 export class UserCreateDto {
+  @IsNotEmpty()
+  @IsEmail()
+  @AutoMap()
+  Email: string;
+
   @IsNotEmpty()
   @IsString()
   @MinLength(4)
