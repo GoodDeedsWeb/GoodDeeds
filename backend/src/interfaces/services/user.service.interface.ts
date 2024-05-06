@@ -1,4 +1,4 @@
-import { Jwt } from 'src/entities/jwt';
+import { LoginResponse } from 'src/entities/login.response';
 import { Result } from 'src/entities/result';
 import { UserCreateDto } from 'src/entities/user_dto/user.create.dto';
 import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
@@ -8,11 +8,11 @@ import { UserUpdateDto } from 'src/entities/user_dto/user.update.dto';
 
 export interface IUserService {
   registerUser(userCreate: UserCreateDto): Promise<Result>;
-  loginUser(userLogin: UserLoginDto): Promise<Jwt | null>;
-  findById(userId: number): Promise<UserDto | null>;
+  loginUser(userLogin: UserLoginDto): Promise<LoginResponse | null>;
   findById(userId: string): Promise<UserDto | null>;
   findByName(name: string): Promise<UserDto | null>;
-  getAll(): Promise<UserDto[]>;
-  updateUser(userUpdate: UserUpdateDto): Promise<Result>;
+  findByEmail(email: string): Promise<UserDto | null>;
+  getAll(): Promise<UserDto[] | null>;
+  updateUser(userUpdate: UserUpdateDto, userId: string): Promise<Result>;
   deleteUser(userDelete: UserDeleteDto): Promise<Result>;
 }
