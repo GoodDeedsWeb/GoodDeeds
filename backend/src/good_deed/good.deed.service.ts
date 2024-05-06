@@ -57,6 +57,25 @@ export class GoodDeedService implements IGoodDeedService {
     }
 
     async updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto): Promise<Result> {
+    async findFriendGoodDeeds(userId: string, friendId: string): Promise<string[] | null> {
+        if (!await this.userFriendService.isFriendship({ UserId: userId, FriendId: friendId })) {
+            return null;
+        }
+
+        const friendGoodDeed = await this.findByUserId(friendId);
+
+        if (!friendGoodDeed) {
+            return null;
+        }
+
+        this.friendGoodDeedList.splice(0)
+
+        friendGoodDeed.forEach(element => {
+            this.friendGoodDeedList.push(element.GoodDeed);
+        });
+
+        return this.friendGoodDeedList;
+    }
         const foundGoodDeed = await this.goodDeedRepository.findById(goodDeedUpdate.Id);
         
         if (!foundGoodDeed) {

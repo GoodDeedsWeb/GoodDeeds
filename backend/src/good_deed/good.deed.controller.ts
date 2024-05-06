@@ -33,13 +33,17 @@ export class GoodDeedController {
     }
 
     const userGoodDeeds = await this.goodDeedService.findByUserId(Number(userId));
+  @UseGuards(AuthenticationGuard)
+  @Get()
+  async getFriendGoodDeeds(@Query('friendId') friendId: string,  @Request() req, @Res({ passthrough: true }) res: Response): Promise<string[]> {
+    const friendGoodDeeds = await this.goodDeedService.findFriendGoodDeeds(req.user['sub'], friendId);
 
-    if (!userGoodDeeds) {
+    if (!friendGoodDeeds) {
       res.status(HttpStatus.NOT_FOUND);
       return;
     }
 
-    return userGoodDeeds;
+    return friendGoodDeeds;
   }
 
   @UseGuards(AuthenticationGuard)
