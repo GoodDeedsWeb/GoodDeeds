@@ -6,8 +6,9 @@ import { GoodDeedDto } from 'src/entities/good_deed_dto/good.deed.dto';
 import { Result } from 'src/entities/result';
 
 export interface IGoodDeedService {
-  createGoodDeed(goodDeedCreate: GoodDeedCreateDto, userId: number): Promise<Result>;
-  findByUserId(userId: number): Promise<GoodDeedDto[] | null>;
-  updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto): Promise<Result>;
-  deleteGoodDeed(goodDeedDelete: GoodDeedDeleteDto): Promise<Result>;
+  createGoodDeed(goodDeedCreate: GoodDeedCreateDto, userId: string): Promise<Result>;
+  findByUserId(userId: string): Promise<GoodDeedDto[] | null>;
+  findFriendGoodDeeds(userId: string, friendId: string): Promise<string[] | null>;
+  updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto, userId: string): Promise<Result>;
+  deleteGoodDeed(goodDeedDelete: GoodDeedDeleteDto, userId: string): Promise<Result>;
 }

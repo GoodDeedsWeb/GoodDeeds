@@ -15,12 +15,6 @@ export class GoodDeedUpdateDto {
   Id: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  @Min(1)
-  @AutoMap()
-  UserId: number;
-
-  @IsNotEmpty()
   @IsString()
   @MinLength(4)
   @AutoMap()

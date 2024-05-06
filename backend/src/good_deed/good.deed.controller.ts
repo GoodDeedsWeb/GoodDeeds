@@ -23,16 +23,18 @@ export class GoodDeedController {
   }
 
   @UseGuards(AuthenticationGuard)
-  @Get()
-  async getUserGoodDeeds(@Query('userId') userId: string, @Res({ passthrough: true }) res: Response): Promise<GoodDeedDto[]> {
-    const numberUserId = Number(userId);
+  @Get('my')
+  async getMyGoodDeeds(@Request() req, @Res({ passthrough: true }) res: Response): Promise<GoodDeedDto[]> {
+    const userGoodDeeds = await this.goodDeedService.findByUserId(req.user['sub']);
 
-    if (!numberUserId) {
-      res.status(HttpStatus.BAD_REQUEST);
+    if (!userGoodDeeds) {
+      res.status(HttpStatus.NOT_FOUND);
       return;
     }
 
-    const userGoodDeeds = await this.goodDeedService.findByUserId(Number(userId));
+    return userGoodDeeds;
+  }
+
   @UseGuards(AuthenticationGuard)
   @Get()
   async getFriendGoodDeeds(@Query('friendId') friendId: string,  @Request() req, @Res({ passthrough: true }) res: Response): Promise<string[]> {
@@ -48,8 +50,8 @@ export class GoodDeedController {
 
   @UseGuards(AuthenticationGuard)
   @Put()
-  async updateGoodDeed(@Body() goodDeedUpdate: GoodDeedUpdateDto, @Res({ passthrough: true }) res: Response){
-    const result = await this.goodDeedService.updateGoodDeed(goodDeedUpdate);
+  async updateGoodDeed(@Body() goodDeedUpdate: GoodDeedUpdateDto, @Request() req, @Res({ passthrough: true }) res: Response){
+    const result = await this.goodDeedService.updateGoodDeed(goodDeedUpdate, req.user['sub']);
 
     res.status(result.statusCode);
 
@@ -58,8 +60,8 @@ export class GoodDeedController {
 
   @UseGuards(AuthenticationGuard)
   @Delete()
-  async deleteUser(@Body() goodDeedDelete: GoodDeedDeleteDto, @Res({ passthrough: true }) res: Response): Promise<string> {
-    const result = await this.goodDeedService.deleteGoodDeed(goodDeedDelete);
+  async deleteUser(@Body() goodDeedDelete: GoodDeedDeleteDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<string> {
+    const result = await this.goodDeedService.deleteGoodDeed(goodDeedDelete, req.user['sub']);
 
     res.status(result.statusCode);
 

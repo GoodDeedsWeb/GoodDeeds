@@ -10,18 +10,19 @@ import { GoodDeedDeleteDto } from 'src/entities/good_deed_dto/good.deed.delete.d
 import { Result } from 'src/entities/result';
 import { GoodDeedUpdateDto } from 'src/entities/good_deed_dto/good.geed.update.dto';
 import { GoodDeedDto } from 'src/entities/good_deed_dto/good.deed.dto';
-import { IUserService } from 'src/interfaces/services/user.service.interface';
+import { IUserFriendService } from 'src/interfaces/services/user.friend.service.interfaces';
 
 @Injectable()
 export class GoodDeedService implements IGoodDeedService {
   constructor(
     @Inject('IGoodDeedRepository') private readonly goodDeedRepository: IGoodDeedRepository,
-    @Inject('IUserService') private readonly userService: IUserService,
+    @Inject('IUserFriendService') private readonly userFriendService: IUserFriendService,
     @InjectMapper() private readonly mapper: Mapper) {}
 
     private goodDeedList: GoodDeedDto[] = []; 
+    private friendGoodDeedList: string[] = [];
 
-    async createGoodDeed(goodDeedCreate: GoodDeedCreateDto, userId: number): Promise<Result> {
+    async createGoodDeed(goodDeedCreate: GoodDeedCreateDto, userId: string): Promise<Result> {
         const goodDeed = this.mapper.map(goodDeedCreate, GoodDeedCreateDto, GoodDeed)
         goodDeed.UserId = userId;
 
@@ -34,13 +35,7 @@ export class GoodDeedService implements IGoodDeedService {
         return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `Good deed has been created.` };
     }
 
-    async findByUserId(userId: number): Promise<GoodDeedDto[] | null> {
-        const foundUser = await this.userService.findById(userId);
-
-        if (!foundUser) {
-            return null;
-        }
-
+    async findByUserId(userId: string): Promise<GoodDeedDto[] | null> {
         const userGoodDeeds = await this.goodDeedRepository.findByUserId(userId);
 
         if (!userGoodDeeds) {
@@ -50,13 +45,12 @@ export class GoodDeedService implements IGoodDeedService {
         this.goodDeedList.splice(0)
 
         userGoodDeeds.forEach(element => {
-            this.goodDeedList.push({ GoodDeed: element.GoodDeed });
+            this.goodDeedList.push({ Id: element.Id, GoodDeed: element.GoodDeed });
         });
 
         return this.goodDeedList;
     }
 
-    async updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto): Promise<Result> {
     async findFriendGoodDeeds(userId: string, friendId: string): Promise<string[] | null> {
         if (!await this.userFriendService.isFriendship({ UserId: userId, FriendId: friendId })) {
             return null;
@@ -76,10 +70,16 @@ export class GoodDeedService implements IGoodDeedService {
 
         return this.friendGoodDeedList;
     }
+
+    async updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto, userId: string): Promise<Result> {
         const foundGoodDeed = await this.goodDeedRepository.findById(goodDeedUpdate.Id);
         
         if (!foundGoodDeed) {
             return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `Good deed is not exist.` };
+        }
+
+        if (foundGoodDeed.UserId != userId) {
+            return { isSuccess: false, statusCode: HttpStatus.BAD_REQUEST, message: `This user don\`t have such good deed.` };   
         }
 
         const updateGoodDeed = this.mapper.map(goodDeedUpdate, GoodDeedUpdateDto, GoodDeed);
@@ -93,8 +93,8 @@ export class GoodDeedService implements IGoodDeedService {
           return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `Good deed has been updated.` };
     }
 
-    async deleteGoodDeed(goodDeedDelete: GoodDeedDeleteDto): Promise<Result> {
-        const foundGoodDeed = await this.goodDeedRepository.findById(goodDeedDelete.Id);
+    async deleteGoodDeed(goodDeedDelete: GoodDeedDeleteDto, userId: string): Promise<Result> {
+        const foundGoodDeed = await this.goodDeedRepository.findByUserIdAndDeed(userId, goodDeedDelete.GoodDeed);
 
         if (!foundGoodDeed) {
           return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `Good deed don\`t exist.` };

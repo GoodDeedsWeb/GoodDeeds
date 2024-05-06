@@ -17,8 +17,12 @@ export class GoodDeedRepository implements IGoodDeedRepository {
         return await this.goodDeedStorage.findOne({ where: { Id: id }, relations: ['User']  });
     }
 
-    async findByUserId(userId: number): Promise<GoodDeed[] | null> {
+    async findByUserId(userId: string): Promise<GoodDeed[]> {
         return (await this.goodDeedStorage.find({ where: { UserId: userId }, relations: ['User'] }));
+    }
+
+    async findByUserIdAndDeed(userId: string, goodDeed: string): Promise<GoodDeed | null> {
+        return (await this.goodDeedStorage.findOne({ where: { UserId: userId, GoodDeed: goodDeed }, relations: ['User'] }));
     }
     
     async update(goodDeed: GoodDeed): Promise<number> {
