@@ -1,4 +1,7 @@
 export class LoginResponse {
-  Jwt: string;
-  UserId: string;
+  message?: string;
+
+  jwt?: string;
+
+  userId?: string;
 }
