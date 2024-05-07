@@ -11,7 +11,7 @@ import { AUTH_GUARD } from '../constants/guards';
     JwtModule.register({
       global: false,
       secret: JWT_SECURITY_KEY,
-      signOptions: { expiresIn: '600s' },
+      signOptions: { expiresIn: '3600s' },
     }),
   ],
   providers: [
