@@ -23,8 +23,10 @@ export class UserCreateDto {
   @IsString()
   @IsStrongPassword({
     minLength: 5,
-    minUppercase: 2,
-    minNumbers: 2,
+    minLowercase: 1,
+    minNumbers: 1,
+    minSymbols: 0,
+    minUppercase: 1,
   })
   @AutoMap()
   Password: string;
