@@ -60,9 +60,9 @@ export class UserController {
 
   @UseGuards(AuthenticationGuard)
   @HttpCode(HttpStatus.OK)
-  @Get('all')
-  async getAllUser(@Res({ passthrough: true }) res: Response): Promise<UserDto[]> {
-    const users = await this.userService.getAll();
+  @Get('other')
+  async getOtherUsers(@Request() req, @Res({ passthrough: true }) res: Response): Promise<UserDto[]> {
+    const users = await this.userService.getOtherUsers(req.user['sub']);
 
     if (!users) {
       res.status(HttpStatus.NOT_FOUND);
@@ -74,12 +74,12 @@ export class UserController {
 
   @UseGuards(AuthenticationGuard)
   @Put()
-  async updateUser(@Body() userUpdateDto: UserUpdateDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<string> {
+  async updateUser(@Body() userUpdateDto: UserUpdateDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<ResponseMessage> {
     const result = await this.userService.updateUser(userUpdateDto, req.user['sub']);
 
     res.status(result.statusCode);
 
-    return result.message;
+    return { message: result.message }
   }
 
   @UseGuards(AuthenticationGuard)

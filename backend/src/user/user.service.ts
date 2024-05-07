@@ -76,8 +76,8 @@ export class UserService implements IUserService {
     return this.mapper.map(user, User, UserDto);
   }
 
-  async getAll(): Promise<UserDto[] | null> {
-    const users = await this.userRepository.getAll();
+  async getOtherUsers(myId: string): Promise<UserDto[] | null> {
+    const users = await this.userRepository.getOther(myId);
 
     return users.map((user) => this.mapper.map(user, User, UserDto));
   }

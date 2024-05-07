@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/db_entities/user';
 import { IUserRepository } from 'src/interfaces/repositories/user.repository.interface';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 @Injectable()
 export class UserRepository implements IUserRepository {  
@@ -25,8 +25,8 @@ export class UserRepository implements IUserRepository {
     return await this.userStorage.findOne({ where: { Email: email } });
   }
 
-  async getAll(): Promise<User[]> {
-    return await this.userStorage.find();
+  async getOther(myId: string): Promise<User[]> {
+    return await this.userStorage.find({ where: { Id: Not(myId) } });
   }
 
   async update(user: User): Promise<number>{

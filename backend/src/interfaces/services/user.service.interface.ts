@@ -12,7 +12,7 @@ export interface IUserService {
   findById(userId: string): Promise<UserDto | null>;
   findByName(name: string): Promise<UserDto | null>;
   findByEmail(email: string): Promise<UserDto | null>;
-  getAll(): Promise<UserDto[] | null>;
+  getOtherUsers(myId: string): Promise<UserDto[] | null>;
   updateUser(userUpdate: UserUpdateDto, userId: string): Promise<Result>;
   deleteUser(userDelete: UserDeleteDto): Promise<Result>;
 }
