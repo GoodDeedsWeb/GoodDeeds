@@ -1,4 +1,4 @@
-import { LoginResponse } from 'src/entities/login.response';
+import { LoginResult } from 'src/entities/login.result';
 import { Result } from 'src/entities/result';
 import { UserCreateDto } from 'src/entities/user_dto/user.create.dto';
 import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
@@ -8,7 +8,7 @@ import { UserUpdateDto } from 'src/entities/user_dto/user.update.dto';
 
 export interface IUserService {
   registerUser(userCreate: UserCreateDto): Promise<Result>;
-  loginUser(userLogin: UserLoginDto): Promise<LoginResponse | null>;
+  loginUser(userLogin: UserLoginDto): Promise<LoginResult>;
   findById(userId: string): Promise<UserDto | null>;
   findByName(name: string): Promise<UserDto | null>;
   findByEmail(email: string): Promise<UserDto | null>;

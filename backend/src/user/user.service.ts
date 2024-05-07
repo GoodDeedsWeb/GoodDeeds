@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Result } from 'src/entities/result';
 import { User } from 'src/entities/db_entities/user';
@@ -12,8 +12,8 @@ import { UserUpdateDto } from 'src/entities/user_dto/user.update.dto';;
 import { IUserRepository } from 'src/interfaces/repositories/user.repository.interface';
 import { IUserService } from 'src/interfaces/services/user.service.interface';
 import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
-import { LoginResponse } from 'src/entities/login.response';
 import { randomBytes } from 'crypto';
+import { LoginResult } from 'src/entities/login.result';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -25,7 +25,7 @@ export class UserService implements IUserService {
     const foundUser = await this.userRepository.findByEmail(userCreate.Email);
 
     if (foundUser) {
-      return { isSuccess: false, statusCode: HttpStatus.BAD_REQUEST, message: `User with email ${userCreate.Email} already exist.` };
+      return { isSuccess: false, statusCode: HttpStatus.BAD_REQUEST, message: `User with email ${userCreate.Email} already exist` };
     }
 
     const user = this.mapper.map(userCreate, UserCreateDto, User)
@@ -35,27 +35,27 @@ export class UserService implements IUserService {
     const newUser = await this.userRepository.create(user);
 
     if (!newUser) {
-      return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
+      return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error` };
     }
 
-    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User has been created.` };
+    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User has been created` };
   }
 
-  async loginUser(userLogin: UserLoginDto): Promise<LoginResponse | null> {
+  async loginUser(userLogin: UserLoginDto): Promise<LoginResult> {
     const user = await this.userRepository.findByEmail(userLogin.Email);
 
     if (!user) {
-      return null;
+      return { StatusCode: 400, Message: 'Incorrect email' }
     }
 
     if (user.Password !== userLogin.Password) {
-      throw new UnauthorizedException('Password is incorrect.');
+      return { StatusCode: 400, Message: 'Incorrect password' }
     }
 
     const payload = { sub: user.Id };
     const token = this.jwtService.sign(payload);
 
-    return { Jwt: token, UserId: user.Id };
+    return { StatusCode: 200, Jwt: token, UserId: user.Id };
   }
 
   async findById(userId: string): Promise<UserDto | null> {
@@ -86,7 +86,7 @@ export class UserService implements IUserService {
     const existUser = await this.userRepository.findById(userId);
 
     if (!existUser){
-      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist.` };
+      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist` };
     }
 
     const updateUser = this.mapper.map(userUpdate, UserUpdateDto, User);
@@ -96,25 +96,25 @@ export class UserService implements IUserService {
     const countUpdatedUser = await this.userRepository.update(updateUser);
 
     if (countUpdatedUser != 1) {
-      return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
+      return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error` };
     }
 
-    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User data has been updated.` };
+    return { isSuccess: true, statusCode: HttpStatus.CREATED, message: `User data has been updated` };
   }
 
   async deleteUser(userDelete: UserDeleteDto): Promise<Result> {
     const foundUser = await this.userRepository.findByEmail(userDelete.Email);
 
     if (!foundUser) {
-      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist.` };
+      return { isSuccess: false, statusCode: HttpStatus.NOT_FOUND, message: `User don\`t exist` };
     }
 
     const deletedUser = await this.userRepository.delete(foundUser);
 
     if (!deletedUser) {
-      return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error.` };
+      return { isSuccess: false, statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: `Internal server error` };
     }
 
-    return { isSuccess: true, statusCode: HttpStatus.OK, message: `User - ${deletedUser.Name} has been deleted.` };
+    return { isSuccess: true, statusCode: HttpStatus.OK, message: `User - ${deletedUser.Name} has been deleted` };
   }
 }

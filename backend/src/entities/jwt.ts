@@ -1,3 +1,3 @@
 export class Jwt {
-  Token: string;
+  token: string;
 }

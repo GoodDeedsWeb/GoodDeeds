@@ -9,34 +9,32 @@ import { UserLoginDto } from '../entities/user_dto/user.login.dto';
 import { AuthenticationGuard } from '../authentication_guard/authentication.guard';
 import { UserDeleteDto } from 'src/entities/user_dto/user.delete.dto';
 import { LoginResponse } from 'src/entities/login.response';
+import { ResponseMessage } from 'src/entities/response.message';
 
 @Controller('user')
 export class UserController {
   constructor(@Inject('IUserService') private readonly userService: IUserService) {}
 
   @Post('register')
-  async registerUser(@Body() userCreateDto: UserCreateDto, @Res({ passthrough: true }) res: Response): Promise<string> {
+  async registerUser(@Body() userCreateDto: UserCreateDto, @Res({ passthrough: true }) res: Response): Promise<ResponseMessage> {
     const result = await this.userService.registerUser(userCreateDto);
 
     res.status(result.statusCode);
 
-    return result.message;
+    return { message: result.message };
   }
 
   @Post('login')
   async loginUser(@Body() userLoginDto: UserLoginDto, @Res({ passthrough: true }) res: Response): Promise<LoginResponse> {
-    const loginResponse = await this.userService.loginUser(userLoginDto);
+    const loginResult = await this.userService.loginUser(userLoginDto);
 
-    const token = loginResponse.Jwt;
-    const userId = loginResponse.UserId; 
-
-    if (!token || !userId){
+    if (loginResult.StatusCode == 400){
       res.status(HttpStatus.BAD_REQUEST);
-      return;
+      return { message: loginResult.Message };
     }
 
     res.status(HttpStatus.OK);
-    return loginResponse;
+    return { jwt: loginResult.Jwt, userId: loginResult.UserId };
   }
 
   @UseGuards(AuthenticationGuard)
@@ -84,11 +82,11 @@ export class UserController {
 
   @UseGuards(AuthenticationGuard)
   @Delete()
-  async deleteUser(@Body() userDeleteDto: UserDeleteDto, @Res({ passthrough: true }) res: Response): Promise<string> {
+  async deleteUser(@Body() userDeleteDto: UserDeleteDto, @Res({ passthrough: true }) res: Response): Promise<ResponseMessage> {
     const result = await this.userService.deleteUser(userDeleteDto);
 
     res.status(result.statusCode);
 
-    return result.message;
+    return { message: result.message }
   }
 }

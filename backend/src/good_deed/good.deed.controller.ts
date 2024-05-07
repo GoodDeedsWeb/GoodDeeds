@@ -23,7 +23,7 @@ export class GoodDeedController {
   }
 
   @UseGuards(AuthenticationGuard)
-  @Get('my')
+  @Get()
   async getMyGoodDeeds(@Request() req, @Res({ passthrough: true }) res: Response): Promise<GoodDeedDto[]> {
     const userGoodDeeds = await this.goodDeedService.findByUserId(req.user['sub']);
 
