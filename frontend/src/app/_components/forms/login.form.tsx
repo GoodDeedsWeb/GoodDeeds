@@ -1,5 +1,3 @@
-import './form.scss';
-
 export default function LoginForm() {
   return (
       <form onSubmit={submitAction}>
