@@ -1,0 +1,44 @@
+$blue: #006ac6;
+$yellow: #fab700;
+$light-gray: #F1F1F1;
+
+.title {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: $blue;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.cell {
+    border: solid 1px $light-gray;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.cell-btn {
+    align-items: center;  
+}
+
+.border-y {
+    border-top: solid 3px $yellow;
+    border-bottom: solid 3px $yellow;
+}
+
+.disable {
+    background-color: $light-gray;
+    pointer-events: none;
+}
+
+table {
+    width: 60vw;
+    height: 40vh;
+}
+
+caption {
+    margin-bottom: 3vh;
+}
