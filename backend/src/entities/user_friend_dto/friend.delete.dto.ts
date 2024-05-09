@@ -1,7 +1,12 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UserFriendDeleteDto {
+export class FriendDeleteDto {
+  @IsNotEmpty()
+  @IsString()
+  @AutoMap()
+  UserId: string;
+
   @IsNotEmpty()
   @IsString()
   @AutoMap()

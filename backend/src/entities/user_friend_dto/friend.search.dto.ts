@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 
-export class UserFriendSearchDto {
+export class FriendSearchDto {
   @AutoMap()
   UserId: string;
 

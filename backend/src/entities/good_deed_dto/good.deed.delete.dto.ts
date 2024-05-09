@@ -9,6 +9,12 @@ import {
 
 export class GoodDeedDeleteDto {
   @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  @AutoMap()
+  Id: number;
+
+  @IsNotEmpty()
   @IsString()
   @MinLength(1)
   @AutoMap()

@@ -8,6 +8,11 @@ import {
 
 export class UserUpdateDto {
   @IsNotEmpty()
+  @IsString()
+  @AutoMap()
+  Id: string;
+
+  @IsNotEmpty()
   @IsEmail()
   @AutoMap()
   Email: string;
