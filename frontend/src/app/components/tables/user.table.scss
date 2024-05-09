@@ -1,0 +1,50 @@
+$blue: #006ac6;
+$yellow: #fab700;
+$light-gray: #F1F1F1;
+
+.title {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: $blue;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.cell {
+    padding: 0.75rem;
+    border: solid 1px $light-gray;
+    font-size: 1.5rem;
+}
+
+.border-y {
+    border-top: solid 3px $yellow;
+    border-bottom: solid 3px $yellow;
+}
+
+.disable {
+    background-color: $light-gray;
+    pointer-events: none;
+}
+
+.link {
+    color: $blue;
+
+}
+
+.link:hover {
+    text-decoration: underline;
+    color: $yellow;
+}
+
+table {
+    width: 45vw;
+    height: 45vh;
+}
+
+caption {
+    margin-bottom: 3vh;
+}
