@@ -21,7 +21,7 @@ export class GoodDeedController {
 
     res.status(result.StatusCode);
 
-    return { Message: result.Message };
+    return { message: result.Message };
   }
 
   @UseGuards(AuthenticationGuard)
@@ -56,6 +56,6 @@ export class GoodDeedController {
 
     res.status(result.StatusCode);
 
-    return { Message: result.Message };
+    return { message: result.Message };
   }
 }

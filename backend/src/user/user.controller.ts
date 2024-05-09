@@ -24,7 +24,7 @@ export class UserController {
 
     res.status(result.StatusCode);
 
-    return { Message: result.Message };
+    return { message: result.Message };
   }
 
   @Post('login')
@@ -103,7 +103,7 @@ export class UserController {
 
     res.status(result.StatusCode);
 
-    return { Message: result.Message }
+    return { message: result.Message }
   }
 
   @UseGuards(AuthenticationGuard)
@@ -113,6 +113,6 @@ export class UserController {
 
     res.status(result.StatusCode);
 
-    return { Message: result.Message }
+    return { message: result.Message }
   }
 }
