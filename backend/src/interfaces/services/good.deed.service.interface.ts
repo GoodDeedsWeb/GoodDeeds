@@ -2,13 +2,13 @@
 import { GoodDeedCreateDto } from 'src/entities/good_deed_dto/good.deed.create.dto';
 import { GoodDeedDeleteDto } from 'src/entities/good_deed_dto/good.deed.delete.dto';
 import { GoodDeedUpdateDto } from 'src/entities/good_deed_dto/good.geed.update.dto';
-import { GoodDeedDto } from 'src/entities/good_deed_dto/good.deed.dto';
 import { Result } from 'src/entities/result';
+import { PaginationParameter } from 'src/entities/pagination/pagination.parameters';
+import { GoodDeedsWithPagingMetaData } from 'src/entities/wrapers/good.deeds.with.paging.meta.data';
 
 export interface IGoodDeedService {
-  createGoodDeed(goodDeedCreate: GoodDeedCreateDto, userId: string): Promise<Result>;
-  findByUserId(userId: string): Promise<GoodDeedDto[] | null>;
-  findFriendGoodDeeds(userId: string, friendId: string): Promise<string[] | null>;
-  updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto, userId: string): Promise<Result>;
-  deleteGoodDeed(goodDeedDelete: GoodDeedDeleteDto, userId: string): Promise<Result>;
+  createGoodDeed(goodDeedCreate: GoodDeedCreateDto): Promise<Result>;
+  findByUserId(userId: string, pagingParam: PaginationParameter): Promise<GoodDeedsWithPagingMetaData | null>;
+  updateGoodDeed(goodDeedUpdate: GoodDeedUpdateDto): Promise<Result>;
+  deleteGoodDeed(goodDeedDelete: GoodDeedDeleteDto): Promise<Result>;
 }

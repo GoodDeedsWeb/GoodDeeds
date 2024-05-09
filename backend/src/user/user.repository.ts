@@ -16,17 +16,13 @@ export class UserRepository implements IUserRepository {
   async findById(id: string): Promise<User> {
     return await this.userStorage.findOne({ where: { Id: id } }); 
   }
-
-  async findByName(name: string): Promise<User | null> {
-    return await this.userStorage.findOne({ where: { Name: name } });
-  }
-
+  
   async findByEmail(email: string): Promise<User | null> {
     return await this.userStorage.findOne({ where: { Email: email } });
   }
 
   async getOther(myId: string): Promise<User[]> {
-    return await this.userStorage.find({ where: { Id: Not(myId) } });
+    return (await this.userStorage.find({ where: { Id: Not(myId) } }));
   }
 
   async update(user: User): Promise<number>{

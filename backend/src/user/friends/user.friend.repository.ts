@@ -40,10 +40,6 @@ export class UserFriendRepository implements IUserFriendRepository {
         return isCompleted;
     }
 
-    async findByUserId(userId: string): Promise<UserFriend[]> {
-        return await this.userFriendStorage.find({ where: { UserId: userId }, relations: ['User', 'Friend'] })
-    }
-
     async findUserFriend(userFriend: UserFriend): Promise<UserFriend | null> {
         return await this.userFriendStorage.findOne({ where: { UserId: userFriend.UserId, FriendId: userFriend.FriendId } });
     }

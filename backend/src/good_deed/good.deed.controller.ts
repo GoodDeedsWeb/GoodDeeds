@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, HttpStatus, Inject, Post, Put, Query, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Inject, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { IGoodDeedService } from 'src/interfaces/services/good.deed.service.interface';
 import { GoodDeedCreateDto } from 'src/entities/good_deed_dto/good.deed.create.dto';
@@ -7,6 +7,8 @@ import { AuthenticationGuard } from 'src/authentication_guard/authentication.gua
 import { GoodDeedUpdateDto } from 'src/entities/good_deed_dto/good.geed.update.dto';
 import { GoodDeedDeleteDto } from 'src/entities/good_deed_dto/good.deed.delete.dto';
 import { GoodDeedDto } from 'src/entities/good_deed_dto/good.deed.dto';
+import { PaginationParameter } from 'src/entities/pagination/pagination.parameters';
+import { ResponseMessage } from 'src/entities/response.message';
 
 @Controller('good-deed')
 export class GoodDeedController {
@@ -14,57 +16,46 @@ export class GoodDeedController {
 
   @UseGuards(AuthenticationGuard)
   @Post()
-  async createGoodDeed(@Body() goodDeedCreate: GoodDeedCreateDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<string> {
-    const result = await this.goodDeedService.createGoodDeed(goodDeedCreate, req.user['sub']);
+  async createGoodDeed(@Body() goodDeedCreate: GoodDeedCreateDto, @Res({ passthrough: true }) res: Response): Promise<ResponseMessage> {
+    const result = await this.goodDeedService.createGoodDeed(goodDeedCreate);
 
-    res.status(result.statusCode);
+    res.status(result.StatusCode);
 
-    return result.message;
+    return { Message: result.Message };
   }
 
   @UseGuards(AuthenticationGuard)
   @Get()
-  async getMyGoodDeeds(@Request() req, @Res({ passthrough: true }) res: Response): Promise<GoodDeedDto[]> {
-    const userGoodDeeds = await this.goodDeedService.findByUserId(req.user['sub']);
+  async getGoodDeeds(@Query('userId') userId: string, @Query() pagingParam: PaginationParameter,  @Res({ passthrough: true }) res: Response): Promise<GoodDeedDto[]> {
+    const result = await this.goodDeedService.findByUserId(userId, pagingParam);
 
-    if (!userGoodDeeds) {
+    if (!result) {
       res.status(HttpStatus.NOT_FOUND);
       return;
     }
 
-    return userGoodDeeds;
-  }
+    res.set('X-Pagination', JSON.stringify(result.MetaData));
 
-  @UseGuards(AuthenticationGuard)
-  @Get()
-  async getFriendGoodDeeds(@Query('friendId') friendId: string,  @Request() req, @Res({ passthrough: true }) res: Response): Promise<string[]> {
-    const friendGoodDeeds = await this.goodDeedService.findFriendGoodDeeds(req.user['sub'], friendId);
-
-    if (!friendGoodDeeds) {
-      res.status(HttpStatus.NOT_FOUND);
-      return;
-    }
-
-    return friendGoodDeeds;
+    return result.GoodDeeds;
   }
 
   @UseGuards(AuthenticationGuard)
   @Put()
-  async updateGoodDeed(@Body() goodDeedUpdate: GoodDeedUpdateDto, @Request() req, @Res({ passthrough: true }) res: Response){
-    const result = await this.goodDeedService.updateGoodDeed(goodDeedUpdate, req.user['sub']);
+  async updateGoodDeed(@Body() goodDeedUpdate: GoodDeedUpdateDto, @Res({ passthrough: true }) res: Response){
+    const result = await this.goodDeedService.updateGoodDeed(goodDeedUpdate);
 
-    res.status(result.statusCode);
+    res.status(result.StatusCode);
 
-    return result.message;
+    return result.Message;
   }
 
   @UseGuards(AuthenticationGuard)
   @Delete()
-  async deleteUser(@Body() goodDeedDelete: GoodDeedDeleteDto, @Request() req, @Res({ passthrough: true }) res: Response): Promise<string> {
-    const result = await this.goodDeedService.deleteGoodDeed(goodDeedDelete, req.user['sub']);
+  async deleteGoodDeed(@Body() goodDeedDelete: GoodDeedDeleteDto, @Res({ passthrough: true }) res: Response): Promise<ResponseMessage> {
+    const result = await this.goodDeedService.deleteGoodDeed(goodDeedDelete);
 
-    res.status(result.statusCode);
+    res.status(result.StatusCode);
 
-    return result.message;
+    return { Message: result.Message };
   }
 }

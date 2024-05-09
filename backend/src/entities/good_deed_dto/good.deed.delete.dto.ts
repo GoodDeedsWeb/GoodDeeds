@@ -1,9 +1,16 @@
 import { AutoMap } from '@automapper/classes';
-import { IsString, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class GoodDeedDeleteDto {
+  @IsNotEmpty()
   @IsString()
-  @MinLength(4)
+  @MinLength(1)
   @AutoMap()
-  GoodDeed: string;
+  UserId: string;
 }

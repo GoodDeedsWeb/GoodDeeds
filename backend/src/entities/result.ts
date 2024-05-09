@@ -1,9 +1,9 @@
 import { HttpStatus } from '@nestjs/common';
 
 export class Result {
-  isSuccess: boolean;
+  IsSuccess: boolean;
 
-  statusCode: HttpStatus;
+  StatusCode: HttpStatus;
 
-  message?: string;
+  Message?: string;
 }

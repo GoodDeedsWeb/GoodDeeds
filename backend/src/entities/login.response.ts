@@ -1,7 +1,7 @@
 export class LoginResponse {
-  message?: string;
+  Message?: string;
 
-  jwt?: string;
+  Jwt?: string;
 
-  userId?: string;
+  UserId?: string;
 }

@@ -1,10 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class UserDeleteDto {
-  // TODO: swap to id
   @IsNotEmpty()
-  @IsEmail()
+  @IsString()
   @AutoMap()
-  Email: string;
+  Id: string;
 }

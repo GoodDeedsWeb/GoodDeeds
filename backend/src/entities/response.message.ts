@@ -1,3 +1,3 @@
 export class ResponseMessage {
-  message: string;
+  Message: string;
 }
