@@ -1,0 +1,36 @@
+version: '3.5'
+
+services:
+  db:
+    image: postgres
+    environment:
+        - POSTGRES_PASSWORD=admin
+    container_name: postgres
+    volumes:
+        - ./db-data:/var/lib/postgresql/data
+        - ./sql-command/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+        - ./sql-command/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    ports:
+        - '5432:5432'
+  
+  backend:
+    image: gamshikk/good-deeds-backend:1.0
+    environment:
+        - POSTGRES_HOST=postgres
+        - POSTGRES_PORT=5432
+        - POSTGRES_USERNAME=postgres
+        - POSTGRES_PASSWORD=admin
+        - POSTGRES_DATABASE=postgres
+    container_name: good-deeds-backend
+    ports:
+        - '4000:4000'
+    depends_on:
+        - db
+    volumes:
+        - ./backend/src:/app/src 
+  
+  frontend:
+    image: gamshikk/good-deeds-frontend:1.0
+    container_name: good-deeds-frontend
+    ports:
+        - '3000:3000'
