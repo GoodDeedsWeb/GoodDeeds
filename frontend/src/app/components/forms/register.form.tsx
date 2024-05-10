@@ -76,7 +76,7 @@ async function submitAction (event: React.SyntheticEvent) {
 
   if (response.status !== 200) {
     helperMessage.classList.remove('disabled');
-    Array.isArray(jsonResponse.Message) ? helperMessage.innerText = jsonResponse.message[0] : helperMessage.innerText = jsonResponse.message; 
+    helperMessage.innerText = jsonResponse.Message ? jsonResponse.Message[0] : jsonResponse.message; 
   }
 
   if (response.status === 201) {

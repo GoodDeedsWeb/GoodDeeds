@@ -52,7 +52,7 @@ async function submitAction (event: React.SyntheticEvent) {
     const helperMessage = document.getElementById('helper-message');
     if (helperMessage){
       helperMessage.classList.remove('disabled');
-      helperMessage.innerText = jsonResponse.message;
+      helperMessage.innerText = jsonResponse.message ? jsonResponse.message : jsonResponse.Message;
     }
   }
 
