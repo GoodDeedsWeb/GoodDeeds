@@ -29,3 +29,23 @@ backend\src\app.module.ts
 ```
 backend\.env
 ```
+
+## Docker
+
+Запустить приложение можно путём развёртки *docker* контейнера.
+
+В проекте имеется *docker-compose* файл, который при запуске подтягивает все нужные изображения:
+для фронтенда, бэкенда и базы данных. В данном файле ни чего менять не нужно! Всё настроено! 
+
+Изображение для фронтенда и бэкенда были размещены на *DockerHub* и доступны по следующи ссылкам:
+- [forntend](https://hub.docker.com/repository/docker/gamshikk/good-deeds-frontend/general)
+- [backend](https://hub.docker.com/repository/docker/gamshikk/good-deeds-backend/general)
+
+Для запуска контейнера необходимо открыть командную строку, перейти в корневой каталог проекта, 
+где содержится *docker-compose.yml* и запустить следующую команду:
+
+```console
+docker compose up
+```
+
+После запуска можно переходить по следующему адресу *http://localhost:3000*
