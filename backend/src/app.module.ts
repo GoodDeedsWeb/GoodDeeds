@@ -5,10 +5,12 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AutoMapperModule } from './automapper/autoMapper.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import dbConfig from './db_config/db.config'
 import { TypeOrmModule } from '@nestjs/typeorm';;
 import { GoodDeedModule } from './good_deed/good.deed.module';
 import { AuthenticationGuardModule } from './authentication_guard/authentication.guard.module';
+import { GoodDeed } from './entities/db_entities/good.deed';
+import { User } from './entities/db_entities/user';
+import { UserFriend } from './entities/db_entities/user.friend';
 
 @Module({
   imports: [
@@ -18,11 +20,23 @@ import { AuthenticationGuardModule } from './authentication_guard/authentication
     AuthenticationGuardModule,
     ConfigModule.forRoot({
       isGlobal: true, 
-      load: [dbConfig]
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => (configService.get('db_config')),
+      imports: [ConfigModule],
       inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('POSTGRES_HOST'),
+        port: configService.get<number>('POSTGRES_PORT'),
+        username: configService.get<string>('POSTGRES_USERNAME'),
+        password: configService.get<string>('POSTGRES_PASSWORD'),
+        database: configService.get<string>('POSTGRES_DB_NAME'),
+        entities: [User, GoodDeed, UserFriend],
+        synchronize: false,
+        migrations: ['dist/migration/*.js'],
+        migrationsTableName: 'migrations',
+      }),
     }), 
   ],
   controllers: [AppController],
