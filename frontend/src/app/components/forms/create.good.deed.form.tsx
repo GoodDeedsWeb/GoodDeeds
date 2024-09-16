@@ -40,7 +40,7 @@ async function GoodDeedCreate (event: React.SyntheticEvent) {
 
   const token = localStorage.getItem("Bearer");
 
-  const url = 'http://localhost:4000/good-deed';
+  const url = 'https://good-deeds.zapto.org/api/good-deed';
 
   const options = {
     method: 'POST',

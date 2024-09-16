@@ -7,7 +7,7 @@ export default async function GetUserDataWithFriendStatus(userId: string): Promi
 
   const token = localStorage.getItem("Bearer");
 
-  const url = 'http://localhost:4000/user?userId='+userId;
+  const url = 'https://good-deeds.zapto.org/api/user?userId='+userId;
   const options = {
     method: 'GET',
     headers: {

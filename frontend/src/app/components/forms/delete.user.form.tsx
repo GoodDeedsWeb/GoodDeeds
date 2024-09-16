@@ -33,7 +33,7 @@ async function submitAction (event: React.SyntheticEvent) {
 
   const jsonData = JSON.stringify(data);
 
-  const url = 'http://localhost:4000/user';
+  const url = 'https://good-deeds.zapto.org/api/user';
 
   const option = {
     method: 'DELETE',

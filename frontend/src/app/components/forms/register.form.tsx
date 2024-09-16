@@ -57,7 +57,7 @@ async function submitAction (event: React.SyntheticEvent) {
 
   const jsonData = JSON.stringify(data);
 
-  const url = 'http://localhost:4000/user/register';
+  const url = 'https://good-deeds.zapto.org/api/user/register';
 
   const options = {
     method: 'POST',

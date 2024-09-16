@@ -7,7 +7,7 @@ export default async function GetOtherUsersData(currentPage: number): Promise<Us
 
   const token = localStorage.getItem('Bearer');
 
-  const url = 'http://localhost:4000/user/other?pageSize=5&currentPage=' + currentPage; 
+  const url = 'https://good-deeds.zapto.org/api/user/other?pageSize=5&currentPage=' + currentPage; 
   const options = {
     method: 'GET',
     headers: {

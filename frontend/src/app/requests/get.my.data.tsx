@@ -8,7 +8,7 @@ export default async function GetMyData(): Promise<UserData | null> {
   const token = localStorage.getItem('Bearer');
   const myId = localStorage.getItem('UserId');
 
-  const url = 'http://localhost:4000/user/my?id=' + myId;
+  const url = 'https://good-deeds.zapto.org/api/user/my?id=' + myId;
   const options = {
     method: 'GET',
     headers: {

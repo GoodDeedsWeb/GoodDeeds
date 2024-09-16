@@ -13,7 +13,7 @@ export default async function AddFriend(userId: string): Promise<boolean> {
 
   const jsonData = JSON.stringify(data);
 
-  const url = 'http://localhost:4000/friend';
+  const url = 'https://good-deeds.zapto.org/api/friend';
 
   const option = {
     method: 'POST',

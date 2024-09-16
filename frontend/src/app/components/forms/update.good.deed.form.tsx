@@ -26,7 +26,7 @@ export default function UpdateGoodDeedForm({ closeForm, goodDeedId }: { closeFor
   
     const jsonData = JSON.stringify(data);
   
-    const url = 'http://localhost:4000/good-deed';
+    const url = 'https://good-deeds.zapto.org/api/good-deed';
   
     const options = {
       method: 'PUT',

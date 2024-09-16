@@ -13,7 +13,7 @@ export default async function DeleteGoodDeed(goodDeedId: number): Promise<boolea
     
       const jsonData = JSON.stringify(data);
     
-      const url = 'http://localhost:4000/good-deed';
+      const url = 'https://good-deeds.zapto.org/api/good-deed';
     
       const option = {
         method: 'DELETE',

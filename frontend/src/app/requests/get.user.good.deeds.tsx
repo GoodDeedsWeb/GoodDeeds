@@ -8,7 +8,7 @@ export default async function GetUserGoodDeeds(userId : string, currentPage: num
 
   const token = localStorage.getItem("Bearer");
 
-  const url = 'http://localhost:4000/good-deed?userId=' + userId + '&pageSize=5&currentPage=' + currentPage; 
+  const url = 'https://good-deeds.zapto.org/api/good-deed?userId=' + userId + '&pageSize=5&currentPage=' + currentPage; 
   const options = {
     method: 'GET',
     headers: {
