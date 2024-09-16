@@ -59,6 +59,7 @@ async function submitAction (event: React.SyntheticEvent) {
   if (response.status === 200) {
     localStorage.setItem('Bearer', jsonResponse.Jwt);
     localStorage.setItem('UserId', jsonResponse.UserId);
-    window.location.href = 'http://localhost:3000/profile/my';
+    // window.location.href = 'http://localhost:3000/profile/my';
+    window.location.href = 'https://good-deeds.zapto.org/profile/my';
   }
 };

@@ -15,7 +15,8 @@ export default function NavPanel() {
   const LogOutBtn = () => {
     localStorage.removeItem('Bearer');
     localStorage.removeItem('UserId');
-    window.location.href = 'http://localhost:3000/auth?mode=login';
+    // window.location.href = 'http://localhost:3000/auth?mode=login';
+    window.location.href = 'https://good-deeds.zapto.org/auth?mode=login';
   }
 
   return (

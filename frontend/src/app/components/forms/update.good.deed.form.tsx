@@ -58,7 +58,8 @@ export default function UpdateGoodDeedForm({ closeForm, goodDeedId }: { closeFor
     }
   
     if (response.status === 201) {
-      window.location.href = 'http://localhost:3000/profile/my';
+      // window.location.href = 'http://localhost:3000/profile/my';
+      window.location.href = 'https://good-deeds.zapto.org/profile/my';
     }
   };
   return (
