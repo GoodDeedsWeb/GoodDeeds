@@ -28,12 +28,12 @@ function UserFormSelectorInner() {
     form = <LoginForm />;
     helperText = "Don't have an account yet?";
     action = 'Create account';
-    linkForAction = 'http://localhost:3000/auth?mode=register';
+    linkForAction = 'https://good-deeds.zapto.org/auth?mode=register';
   } else if (mode === 'register') {
     form = <RegisterForm />;
     helperText = 'Do you already have an account?';
     action = 'Login in account';
-    linkForAction = 'http://localhost:3000/auth?mode=login';
+    linkForAction = 'https://good-deeds.zapto.org/auth?mode=login';
   }
 
   return (

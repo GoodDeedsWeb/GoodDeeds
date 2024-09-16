@@ -64,7 +64,7 @@ export default function UserTable() {
         <tbody>
           {usersData.map((user: UserData) => (
             <tr key={user.Id}>
-              <td className='cell'><a href={'http://localhost:3000/profile/user?id=' + user.Id} className='link'>{user.Id}</a></td>
+              <td className='cell'><a href={'https://good-deeds.zapto.org/profile/user?id=' + user.Id} className='link'>{user.Id}</a></td>
               <td className='cell'>{user.Name}</td>
               <td className='cell'>{user.Email}</td>
             </tr>

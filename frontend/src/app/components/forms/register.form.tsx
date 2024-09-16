@@ -80,6 +80,6 @@ async function submitAction (event: React.SyntheticEvent) {
   }
 
   if (response.status === 201) {
-    window.location.href = 'http://localhost:3000/auth?mode=login';
+    window.location.href = 'https://good-deeds.zapto.org/auth?mode=login';
   }
 };
