@@ -31,10 +31,10 @@ export default function NavPanel() {
         <div className="items-center justify-between w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
             <li>
-              <a href='http://localhost:3000/profile/my' className="block py-2 px-3 text-gray-900 rounded hover:text-blue-600">Home</a>
+              <a href='https://good-deeds.zapto.org/profile/my' className="block py-2 px-3 text-gray-900 rounded hover:text-blue-600">Home</a>
             </li>
             <li>
-              <a href="http://localhost:3000/all-users-table" className="block py-2 px-3 text-gray-900 rounded hover:text-blue-600">Users</a>
+              <a href="https://good-deeds.zapto.org/all-users-table" className="block py-2 px-3 text-gray-900 rounded hover:text-blue-600">Users</a>
             </li>
           </ul>
         </div>

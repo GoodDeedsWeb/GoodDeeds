@@ -24,7 +24,7 @@ export default function MyProfileDataContainer() {
   const myId = String(localStorage.getItem('UserId'));
 
   if (!myId) {
-    window.location.href = 'http://localhost:3000/auth?mode=login';
+    window.location.href = 'https://good-deeds.zapto.org/auth?mode=login';
   }
 
   useEffect(() => {

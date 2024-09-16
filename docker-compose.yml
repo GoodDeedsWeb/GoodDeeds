@@ -15,7 +15,9 @@ services:
         - '5432:5432'
   
   backend:
-    image: gamshikk/good-deeds-backend:1.0
+    # image: gamshikk/good-deeds-backend:1.0
+    build:
+        context: ./backend
     environment:
         - POSTGRES_HOST=postgres
         - POSTGRES_PORT=5432
@@ -31,7 +33,9 @@ services:
         - ./backend/src:/app/src 
   
   frontend:
-    image: gamshikk/good-deeds-frontend:1.0
+    # image: gamshikk/good-deeds-frontend:1.0
+    build:
+        context: ./frontend
     container_name: good-deeds-frontend
     ports:
         - '3000:3000'
